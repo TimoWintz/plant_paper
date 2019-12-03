@@ -1,2 +1,40 @@
-\subsection{Virtual plants and virtual scanner}
-\subsection{Computer vision-assisted segmentation and 3D reconstruction}
+
+\textbf{Virtual plants.} The virtual plants were designed with the Python library OpelAlea developped by french research institutes of biology and mathematics to provide tools for plant architecture modelling. The ROMI partners from Virtual Plants team in INRIA Grenoble provided virtual 3D meshes of Arabidopsis Thaliana designed with the L-Py library from OpenAlea, which is a python implementation of L-system. L-systems were developped in 1968 by Aristid Lindenmayer \cite{} to model plant growth. It is a generative grammar that allows to grow a virtual plant using symbols, shapes and constraints derived for plant growth observation. 
+
+Formally it is called a rewriting system, or formal grammar. It comprises: 
+
+\begin{itemize}
+    \item A vocabulary V containing the \textit{modules} of the system. For plant generation it will represent an architectural element of the plant (apex, internode, leaf) and associated parameters (age, length, etc)
+    \item An initial \textit{axiom} or state $s_0$ corresponding to the virtual plant at $t_0$. It is a string of elements from the vocabulary.
+    \item A set of \textit{production} rules to iterate in order to model the growth. They will be applied in parallel to each variable element from the string of the previous state. They are composed of a \textit{predecessor}, to identify the elements that will be replaced by a \textit{successor}.
+\end{itemize}
+
+The strings can then be represented graphically in 3D using OpenAlea's PlantGL (Figure\ref{fig:lpy}).\\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 0.1\linewidth]{figures/blank.png}
+    \caption{Left: Example of an L-Py system with two modules, right: Visual representation of the first five steps of the L-system comprising apex (green dots) and internodes (brown sticks) in the vocabulary. Figure from \cite{boudon_l-py:_2012}}
+    \label{fig:lpy}
+\end{figure}
+
+The A. Thaliana provided by INRIA comprised 5 different types of organs: fruit, stem, peduncle, leaf and flower, and geometrical data such as organ lengths and angles between organs, in order to produce a ground truth for every step of the pipeline. They were provided as meshes, with a material associated to each organ.\\
+
+\textbf{Virtual scanner.} An API was implemented to generate and visualise the virtual plants in Blender. The 3D models are loaded in a virtual environment and virtual cameras are used to take pictures of the model (Figure \ref{fig:plants}). The API was used to simulate a virtual scanner and generate images for the training of neural networks. The position, pan and tilt of the cameras is tunable and allows to generate camera paths to take images from different views. It is also possible to move the plant in the scanner. First the plants were placed on a highy contrasted scene. After attending the Image Analysis Methods in Plant Science (IAMPS) workshop we improved the virtual scanner by adding a 3D background \cite{} which reproduces realistic lightening to increase the representation space of the virtual plants.
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.1\linewidth]{figures/blank.png}
+	\caption{Illustration of 2D overlapping due to perspective projection }
+	\label{fig:pinhole}
+\end{figure}
+
+The virtual labels are acquired by rendering the plant material by material, with one material per organ (Figure \ref{fig:plants}). The organs considered for \textit{A. Thaliana} are leaf, stem, flower, fruit and peduncle. In the pinhole model \cite{} we use for 3D to 2D projection, a whole line in 3D projects onto a single pixel (Figure \ref{fig:pinhole}). As a consequence, a single pixel can belong to several classes depending on the organs crossed by the line. We decided that the labelling method should take this plurality into account rather then keeping only the class of the organ closer to the virtual camera. Therefore, for each pixel and 6 classes (including background), there are $2^6 = 64$ possible labels. To save the labels in a binary image, it was natural to encode the labels as binary numbers and convert them to decimal numbers. If from one viewpoint the background, a leaf and the stem project onto the same pixel due to perspective projection, the label will be $L_2 = 100110$, and the value of the pixel will therefore be $L_{10} = 38$.\\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.1\linewidth]{figures/blank.png}
+	\caption{Example of virtual training images and all labels}
+	\label{fig:plants}
+\end{figure}
