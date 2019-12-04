@@ -2,17 +2,16 @@ Plant architecture is a complex geometrical object. Due to both genetic and
 environmental variations, organs evolve in patterns which present great diversity
 both between species and among individuals of the same species. Automated
 reconstruction of plant structure from lab or in-field acquisitions remains a challenge in computer
-vision (ref). The most common method for complex measurements of plant structure
+vision. The most common method for complex measurements of plant structure
 remains handmade measurements and image analysis is a major bottleneck in plant phenotyping
 \cite{minervini2015image}. The application of automated processing of plant structure are many: precise
 quantifying of biomass and yield for agricultural crops, estimation of environmental response
-of crops \cite{peirone2018assessing}, mapping genotypes to
-phenotypes, estimating growth parameters of species, among other. (Find many
-refs)
+of crops~\cite{peirone2018assessing, srivastava2017drought},  mapping genotypes to
+phenotypes, estimating growth parameters of species, among other~\cite{denis1998symmetry}.
 
 Deep convolutional networks have shown -- see for example \cite{krizhevsky2012imagenet} --
 to be the state of the art method for many classification tasks. Several
-networks (\cite{ronneberger2015u}, \cite{long2015fully}) leverage huge classification datasets (ImageNet) to provide pixel by
+networks~\cite{ronneberger2015u, long2015fully} leverage huge classification datasets (ImageNet) to provide pixel by
 pixel semantic segmentation. They have been successfully used for plant organ
 segmentation \cite{shi2019plant}, but are still limited to simple case with a very
 small diversity in test datasets. Using simulated data to augment training
@@ -25,9 +24,10 @@ systems are rewriting systems specifically developped to model plant growth.
 They can be used to model arbitrary complex model of plants~\cite{boudon_l-py:_2012}.
 
 In this work, we propose to use plant models to train convolutional neural network for
-identification of different plant organs. The specific target application of
+identification of different plant organs in RGB images, as well as a
+reconstruction of the 3D structure of plants from these images. The specific target application of
 our method is the identification of organs of the model plant Arabidopsis
 thaliana. We describe a data augmentation model using plant models and HDRI
 pictures to produce ground truth images, as well as a simple method for
 fine-tuning on real word data. We then present qualitative results in various
-acquisition condition to assert the robustness of our method.
+acquisition conditions to assert the robustness of our method. 
