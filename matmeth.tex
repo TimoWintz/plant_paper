@@ -1,5 +1,5 @@
 
-\textbf{Virtual plants.} The virtual plants were designed with the Python library OpelAlea developped by french research institutes of biology and mathematics to provide tools for plant architecture modelling. The ROMI partners from Virtual Plants team in INRIA Grenoble provided virtual 3D meshes of Arabidopsis Thaliana designed with the L-Py library from OpenAlea, which is a python implementation of L-system. L-systems were developped in 1968 by Aristid Lindenmayer \cite{} to model plant growth. It is a generative grammar that allows to grow a virtual plant using symbols, shapes and constraints derived for plant growth observation. 
+\textbf{Virtual plants.} The virtual plants were designed with the Python library OpelAlea \cite{} developped by french research institutes of biology and mathematics to provide tools for plant architecture modelling. 3D meshes of Arabidopsis Thaliana were designed with the L-Py library from OpenAlea, which is a python implementation of L-system. L-systems were developped in 1968 by Aristid Lindenmayer \cite{} to model plant growth. It is a generative grammar that allows to grow a virtual plant using symbols, shapes and constraints derived for plant growth observation. 
 
 Formally it is called a rewriting system, or formal grammar. It comprises: 
 
@@ -9,7 +9,7 @@ Formally it is called a rewriting system, or formal grammar. It comprises:
     \item A set of \textit{production} rules to iterate in order to model the growth. They will be applied in parallel to each variable element from the string of the previous state. They are composed of a \textit{predecessor}, to identify the elements that will be replaced by a \textit{successor}.
 \end{itemize}
 
-The strings can then be represented graphically in 3D using OpenAlea's PlantGL (Figure\ref{fig:lpy}).\\
+The strings can then be represented graphically in 3D using OpenAlea's PlantGL (Figure\ref{fig:lpy}). The A. Thaliana models comprised 5 different types of organs: fruit, stem, peduncle, leaf and flower.\\
 
 \begin{figure}[h!]
     \centering
@@ -18,9 +18,8 @@ The strings can then be represented graphically in 3D using OpenAlea's PlantGL (
     \label{fig:lpy}
 \end{figure}
 
-The A. Thaliana provided by INRIA comprised 5 different types of organs: fruit, stem, peduncle, leaf and flower, and geometrical data such as organ lengths and angles between organs, in order to produce a ground truth for every step of the pipeline. They were provided as meshes, with a material associated to each organ.\\
 
-\textbf{Virtual scanner.} An API was implemented to generate and visualise the virtual plants in Blender. The 3D models are loaded in a virtual environment and virtual cameras are used to take pictures of the model (Figure \ref{fig:plants}). The API was used to simulate a virtual scanner and generate images for the training of neural networks. The position, pan and tilt of the cameras is tunable and allows to generate camera paths to take images from different views. It is also possible to move the plant in the scanner. First the plants were placed on a highy contrasted scene. After attending the Image Analysis Methods in Plant Science (IAMPS) workshop we improved the virtual scanner by adding a 3D background \cite{} which reproduces realistic lightening to increase the representation space of the virtual plants.
+\textbf{Virtual scanner.} An API was implemented to generate and visualise the virtual plants in Blender. The 3D models are loaded in a virtual environment and virtual cameras are used to take pictures of the model (Figure \ref{fig:plants}). The API was used to simulate a virtual scanner and generate images for the training of neural networks. The focal, position, pan and tilt of the cameras are tunable and allow to generate images from different views. It is also possible to move the plant in the scanner. The plant is placed in a virtual background. It is a $360^{\circ}$ image and rendering it in blender reproduces the scene lightening in order to increase the complexity of the images acquired with the virtual scanner. Several sets of virtual backgrounds were used, without limitations on the lightning environement (night, daylight, sunset) or the type of scene (indoor, outdoor).
 
 
 \begin{figure}[h]
@@ -30,11 +29,71 @@ The A. Thaliana provided by INRIA comprised 5 different types of organs: fruit, 
 	\label{fig:pinhole}
 \end{figure}
 
-The virtual labels are acquired by rendering the plant material by material, with one material per organ (Figure \ref{fig:plants}). The organs considered for \textit{A. Thaliana} are leaf, stem, flower, fruit and peduncle. In the pinhole model \cite{} we use for 3D to 2D projection, a whole line in 3D projects onto a single pixel (Figure \ref{fig:pinhole}). As a consequence, a single pixel can belong to several classes depending on the organs crossed by the line. We decided that the labelling method should take this plurality into account rather then keeping only the class of the organ closer to the virtual camera. Therefore, for each pixel and 6 classes (including background), there are $2^6 = 64$ possible labels. To save the labels in a binary image, it was natural to encode the labels as binary numbers and convert them to decimal numbers. If from one viewpoint the background, a leaf and the stem project onto the same pixel due to perspective projection, the label will be $L_2 = 100110$, and the value of the pixel will therefore be $L_{10} = 38$.\\
-
+The virtual labels are acquired by rendering the plant material by material, with one material per organ (Figure \ref{fig:plants}). The organs considered for \textit{A. Thaliana} are leaf, stem, flower, fruit and peduncle. In the pinhole model \cite{} we use for 3D to 2D projection, a whole line in 3D projects onto a single pixel (Figure \ref{fig:pinhole}). As a consequence, a single pixel can belong to several classes depending on the organs crossed by the line. The labelling method takes this plurality into account by generating a ground truth image for each class. 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.1\linewidth]{figures/blank.png}
 	\caption{Example of virtual training images and all labels}
 	\label{fig:plants}
 \end{figure}
+
+TODO: add change text after Christophe new plants, add random colors\\
+
+
+\textbf{3D round truth.} The 3D virtual plants were used to train and evaluate the 3D reconstruction. The virtual mesh is regularly subsampled with CloudCompare \cite{girardeau-montaut_cloudcompare-open_2011} in order to get a density matching the voxel density in the volume to carve (see space carving section for explanations). Then this 3D point cloud is voxellized and each voxel of the volume to carve acquires an organ class, or class 0 (background) if it is not part of the plant. Then the vector is saved in a sparse representation to save memory. For the trainings, the data generator reads the sparse vector and encodes it in a dense representation to compare it to the predicted classes. It is needed to densify it because PyTorch can't backpropagate easily through a sparse representation.\\
+
+%To train the classification on real plants, it was first considered to print a known plant model in 3D with Sculpteo, however the stem of the model wasn't thick enough and it buckled during the printing. We also considered to use an opensource dataset, however most segmented 3D dataset aimed for reconstruction are provided in Lidar or RGB-D data, and not from RGB to 3D. Therefore we decided to restrict ourselves to 3D virtual plants. We also used the 3D reconstructed models with the initial space-carving approach implemented previously in the pipeline \cite{wintz_automated_nodate} for comparison.\\
+
+\textbf{Image segmentation.} The objective of image segmentation is to convert an input image in a stack of probability map of the same dimension as the image. For C classes there will be C probability maps, each corresponding to one class. The value of a pixel in the probability map of class k is the probability that this pixel belongs to the organ-type k in the original image.
+
+
+The image segmentation was performed using segmentation convolutional neural network \cite{guo_review_2018}. Such segmentation networks are based on a contracting structure from an image to a low dimension feature space, which encodes the content of the image. It is branched to a symmetric expanding structure that translates the information from the feature space to an image similar to the original one, but with only the content of interest reconstructed. The contracting structure is directly inspired from classification neural networks, and made of convolution layers, non-linearities and down-pooling layers. The convolution kernels allow to filter the information to emphasise the content, and the down-pooling allows to reduce the dimension of the information. The expanding structure reproduces the path in the other direction, with up-pooling layers and convolutions. The spatial information is re-injected to reconstruct the image properly, by providing the down-pooling coordinates from the contracting phase.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale = 0.25]{figures/blank.png}
+    \caption{Example of segmentation network: the U-Net architecture \cite{ronneberger_u-net:_2015}}
+    \label{fig:unet}
+\end{figure}
+
+  The structure tested was inspired from U-Net \cite{ronneberger_u-net:_2015}, however the contracting structure, or encoder, was replaced by a classification network trained on ImageNet, and with 6 classes to segment. This classification structure has already been trained to encode the semantic representation of an image in the latent space. We tested ResNet \cite{he_deep_2015} which is a deep neural network where inputs from previous layers are regularly reinjected into deeper layers in order to maintain the geometry and avoid vanishing gradients \cite{hochreiter_vanishing_1998}.\\
+  
+
+\textbf{Deep learning training}
+The network was trained with images from the virtual scanner. TODO(Describe the path, dimension of the images). The dataset comprised TODO(Number of images). To make the network robust to images and lignting conditions that are not in the dataset, we artificially augment the dataset by adding TODO(add gaussian noise, change contrast, rotation, déformation, more?).
+The dataset was split into 3 sets:
+
+\begin{itemize}
+    \item a training set to train the network (50\% of the dataset)
+    \item a validation set on which the network is not trained and is used to evaluate and compare the different networks (25\% of the dataset)
+    \item a test set used at the very end on the selected architecture (25\% of the dataset)
+\end{itemize}
+
+
+To evaluate the segmentation of the images, a combination of metrics were used. As it is a multiclass problem, a sigmoid is applied to each output in order to contain the numerical range of the predictions. First crossentropy was used, it is a per-pixel metric. It represents the uncertainty of the prediction compared to the ground-truth. If the class of a pixel has a very low predicted probability, it will highly penalise the loss. If the probability is close to one, the contribution to the loss is close to zero. The notion of entropy represents this discrepancy between the ground truth distribution and the predicted distribution. It is naturally translated at the mathematical level with the negative of the logarithm. 
+
+\begin{equation}
+    L =-\sum_i^n\sum_k^C{y^k_{i, gt}\ln(y_{\textrm{i}, \textrm{pred}}^k)}
+\end{equation}
+
+Where n is the number of pixels in the image, C the number of possible classes, $y_{gt}^k = 1$ if pixel i is in class k, 0 otherwise, and $y_ {\textrm{i}, \textrm{pred}}^k = p(\textrm{label}(y_{\textrm{i}, \textrm{gt}}) = k)$. \\
+
+The second loss we used was the Dice coefficient, which theoretically writes as:
+
+\begin{equation}
+    s = 1 - \frac{1}{n}\sum_{i=1}^n\sum_{k=0}^{C}y_{\textrm{i}, \textrm{gt}} y_{\textrm{i}, \textrm{pred}}^k
+\end{equation}
+
+
+This coefficient compares the number of right predictions to the number of samples, for each class. In practice, the product of the ground truth by the predictions is summed, so that only the prediction of the right class contributes to the sum. For example for point n, the class is k, and the prediction for class k is $p_k$, the loss for point n will be $1 - \frac{2p_k}{2} = 1 - p_k$. The total loss is computed vector-wise, and lies between 0 and 1.\\
+
+We used the mean of these two losses for the training, as the crossentropy has more stable gradients, but the Dice loss is what we want to minimise, and is less sensitive to class imbalance.\\
+
+
+
+\textbf{Fine-tuning.}
+Our network was trained on virtual Arabidopsis Thaliana model but aims at reconstructing real plants. Therefore when the virtual plants fail at reproducing the complexity of real plants, the network can perform poorly. the network also fails when confronted to other plant species with very different traits. Therefore we conceived a simple interface that allows the user to manually label a few images of interest (three images is enough), then run the training of the network on this small dataset. This way, the network will be able to segment similar images with correct classes. \\
+
+\textbf{Space Carving.}
+We used space-carving to reconstructi the palnts in 3D from the 2D images. The space carving \cite{kutulakos_theory_1999} is a photogrammetric approach which uses pictures of an object from different point of views to reconstruct an object in 3D. To simplify the explanation we will take the example of the original space carving paper \cite{kutulakos_theory_1999}. Let the objective be to reconstruct a sculpture in 3D. The cameras circle a volume of interest that contains the cube and take $N$ pictures at regular intervals. Each picture will be pre-processed, with a masking step: on each image the mask will give the probability that the pixel belongs or not to the sculpture. Then, the surrounded volume is computed virtually, and each voxel of the volume is projected onto each masked view. If a voxel has projected onto the sculpture for each 2D-view, it is part of the 3D-sculpture. Otherwise it is part of the background: voxel after voxel, the volume is carved into the shape of the object. The main limitation of this technique is that the problem is ill-posed and the reconstructed object will be a \textit{photo hull} \cite{kutulakos_theory_1999} of the desired object, that is an object which is the union of all objects derivable from the multi-view observation. It can cause problems for highly curved or hollow objects, but in the case of plants it is not a major limitation. 
+
