@@ -1,109 +1,28 @@
-% Plant architecture is a complex product where both genetic determinants and
-% environmental factors interact in intricate developmental mechanisms during the
-% plant’s life. Understanding this fascinating process is an active research field
-% that requires precise measurements of plant structures at different scales.
-% Scrutinizing plant architecture is also a cornerstone in agriculture, from
-% breeding new varieties to daily monitoring in the field. In both cases,
-% phenotyping must reconcile accuracy at the plant scale (from mm to meter range)
-% with a high throughput. However, such phenotyping solutions are too expensive
-% for most researchers or farmers. Their cost is due to the use of high-tech
-% components or to their demanding development that requires competence in
-% mechanics, robotics, sensors, computational analysis and database management. As
-% a consequence, most phenotyping systems are huge platforms or machines achieving
-% very high throughput to ensure a profitable investment.
-%     Recently, the cost of many electronic devices dropped and support for open
-% source hardware and software solutions is rising. Constant progress is made in
-% computer vision to reconstruct precise 3D objects. However, state-of-the-art
-% algorithms performs badly with plants: they lack robustness to variations in the
-% conditions of acquisition and are not generic to handle all types of plants.
-%     In this paper we are interested particularly in Phyllotaxy. This field
-% studies the arrangement of botanical structures around axis of growth [1]. This
-% is one of the most famous examples of regular patterns with mathematical
-% properties in living organisms. While it is a dynamic interdisciplinary research
-% front, there is no automated solution for phenotyping phyllotaxis yet.
-%     In this context, we are prototyping an inexpensive, easy-to-build,
-% easy-to-use robot for phenotyping plant architecture in 3D. It has a medium
-% throughput that should fit the needs of small research teams or micro-farms.
-% Despite the use of cheap and basic components, our challenge is to develop image
-% analysis pipeline achieving high-precision in 3D phenotyping over a large
-% diversity of plant architectures. As a first proof of concept, we tested an
-% indoor set-up with the fine structure of the phyllotaxis of the model plant
-% Arabidopsis thaliana.
-
-
-% Large-scale phenotyping can help us understand biology but also to adapt
-% cultures to a chang-
-% ing environment. Working on well understood model plants like arabidopsis can
-% both provide
-% useful data to the biologists and is an important stepping stone to the study of
-% more complex
-% models: in-field imaging of crops, imaging of plant populations. . .
-% Data collection and traits extractions are time-consuming process and a major
-% bottleneck
-% in plant phenotyping [13]. There is therefore a need of automated procedures to
-% quickly
-% c 2018. The copyright of this document resides with its authors.
-% It may be distributed unchanged freely in print or electronic forms.2
-% WINTZ, COLLIAUX, HANAPPE: EXTRACTION OF TRAITS FROM ARABIDOPSIS
-% extract important parameters from live models. In this work, we propose a fully
-% automated
-% procedure to extract the structure of arabidopsis, including internode lengths
-% and angles be-
-% tween successive organs.
-
-% Extracting plant fea-
-% tures is a first step toward quantifying biomass and
-% yield (Mathan et al., 2016), assessing flowering time and
-% drought tolerance (Minervini et al., 2016), mapping
-% genotypes to phenotypes (Balduzzi et al., 2017; Setter,
-% 2012), and studying morphological properties of plant
-% architectures (Conn et al., 2017a; Conn et al., 2017b;
-% Bucksch et al., 2017; Li et al., 2018; Prusinkiewicz and
-% Lindenmayer, 1996). Common phenotyping features of
-% interest include the number, size, and shape of leaves (Wilf
-% et al., 2016; Huang et al., 2018); plant height and growth
-% rates (Madec et al., 2017); and branch lengths, diameters,
-% and angles (Bucksch et al., 2017); among other
-
-
 Plant architecture is a complex geometrical object. Due to both genetic and
 environmental variations, organs evolve in patterns which present great diversity
 both between species and among individuals of the same species. Automated
 reconstruction of plant structure from lab or in-field acquisitions remains a challenge in computer
 vision (ref). The most common method for complex measurements of plant structure
-remains handmade measurements and is a major bottleneck in plant phenotyping
-(ref).  The application of automated processing of plant structure are many: precise
-quantifying of biomass and yield for agricultural crops, mapping genotypes to
+remains handmade measurements and image analysis is a major bottleneck in plant phenotyping
+\cite{minervini2015image}. The application of automated processing of plant structure are many: precise
+quantifying of biomass and yield for agricultural crops, estimation of environmental response
+of crops \cite{peirone2018assessing}, mapping genotypes to
 phenotypes, estimating growth parameters of species, among other. (Find many
 refs)
 
-% Many different techniques can be used to non-invasively obtain plant data:
-% point cloud from laser scans, color images from a single view point, depth
-% cameras etc.
-
-% In the last two years, deep convolutional networks have outperformed the state
-% ofthe art in many visual recognition tasks, e.g. [7,3]. While convolutional
-% networkshave  already  existed  for  a  long  time  [8],  their  success  was
-% limited  due  to  thesize of the available training sets and the size of the
-% considered networks. Thebreakthrough by Krizhevsky et al. [7] was due to
-% supervised training of a largenetwork with 8 layers and millions of parameters
-% on the ImageNet dataset with1 million training images. Since then, even larger
-% and deeper networks have beentrained [12].
-%
-
-Since the founding of works of (ref. ), deep convolutional networks have shown
+Deep convolutional networks have shown -- see for example \cite{krizhevsky2012imagenet} --
 to be the state of the art method for many classification tasks. Several
-networks (ref ref) leverage huge classification datasets (ImageNet) to provide pixel by
+networks (\cite{ronneberger2015u}, \cite{long2015fully}) leverage huge classification datasets (ImageNet) to provide pixel by
 pixel semantic segmentation. They have been successfully used for plant organ
-segmentation (ref ref ref), but are still limited to simple case with a very
+segmentation \cite{shi2019plant}, but are still limited to simple case with a very
 small diversity in test datasets. Using simulated data to augment training
 datasets is a method which have shown to improve neural network performance in
-many fields (ref ref).
+many fields, e.g~\cite{qiu2016unrealcv}, \cite{alhaija2018augmented}.
 
 Plant architecture is a well studied research topic, and many generative model
 of plant architecture have been developped in the last decades. Lindenmayer
 systems are rewriting systems specifically developped to model plant growth.
-They can be used to model arbitrary complex model of plants.
+They can be used to model arbitrary complex model of plants~\cite{boudon_l-py:_2012}.
 
 In this work, we propose to use plant models to train convolutional neural network for
 identification of different plant organs. The specific target application of
