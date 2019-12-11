@@ -1,19 +1,24 @@
-\tim{\paragraph{Target applicative setup.} TODO: speak about the
-real scanner.  }{}
+\tim{\paragraph{Target applicative setup.}
+To acquire plant images in a real world application scenario, we use a home made solution as a 3D
+scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
+custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
+A Sony RX0 camera is mounted on the camera mount and is controlled using a
+Wifi interface. This allows for views from any point in space in a box containing
+the imaged plant. Figure~TODO illustrate resulting images from the described
+setup.}{}
 
 \paragraph{\tim{Generative plant models.}{Virtual plants.}}
 
-
 The \tim{generative plant models}{virtual plants} were designed with
 OpenAlea~\cite{pradal2009plantgl}. OpenAlea is an open source software
-suite developped by INRIA to provide many tools for plant architecture
-modelling. \tim{The model plant \textit{Arabidopsis Thaliana} was chosen to
+suite developped by INRIA to provide tools for plant architecture
+modelling. \tim{The model plant \emph{Arabidopsis Thaliana} was chosen to
 illustrate the methods in the paper, because it is a well-studied
 plant and is a subject of active interest for many biologists.}{}
 
-\tim{A generative model of \textit{A. Thaliana} was specifically
+\tim{A generative model of \emph{A. Thaliana} was specifically
 written in the L-py programming language. L-py is a python extension,
-part of OpenAlea, which implements L-systems.}{3D meshes of \textit{A.
+part of OpenAlea, which implements L-systems.}{3D meshes of \emph{A.
 Thaliana} were designed with the L-Py library from OpenAlea, which
 is a python implementation of L-system.} L-systems were developped
 in 1968 by Aristid Lindenmayer~\cite{prusinkiewicz2012algorithmic}
@@ -25,17 +30,17 @@ Formally it is called a rewriting system, or formal grammar. It
 comprises:
 
 \begin{itemize}
-    \item A vocabulary V containing the \textit{modules} of the
+    \item A vocabulary V containing the \emph{modules} of the
     system. For plant generation it will represent an architectural
     element of the plant (apex, internode, leaf) and associated
-    parameters (age, length, etc) \item An initial \textit{axiom}
+    parameters (age, length, etc) \item An initial \emph{axiom}
     or state $s_0$ corresponding to the virtual plant at $t_0$. It
     is a string of elements from the vocabulary.  \item A set
-    of \textit{production} rules to iterate in order to model
+    of \emph{production} rules to iterate in order to model
     the growth. They will be applied in parallel to each variable
     element from the string of the previous state. They are composed
-    of a \textit{predecessor}, to identify the elements that will be
-    replaced by a \textit{successor}.
+    of a \emph{predecessor}, to identify the elements that will be
+    replaced by a \emph{successor}.
 \end{itemize}
 
 The strings can then be represented graphically in 3D using OpenAlea's
@@ -51,13 +56,13 @@ different types of organs: fruit, stem, peduncle, leaf and flower.
     \cite{boudon_l-py:_2012}} \label{fig:lpy}
 \end{figure}
 
-\tim{Comment: I think if we want to explain L-system, we have to
+\tim{TODO: I think if we want to explain L-system, we have to
 provide a simple example with the associated rewriting rules}{}
 
 \tim{Randomness can be added to the models by asigning different
 probabilities to the set for rules. This allow to produce different
 looking individual plants from a single set of rules. Our L-py model
-for \textit{A. Thaliana} can be found online~\cite{}.}{}
+for \emph{A. Thaliana} can be found online~\cite{}.}{}
 
 \tim{The generated plant models are exported as meshes using the
 standard OBJ format.}{}
@@ -82,16 +87,16 @@ model around the plant, as we would on the real world setup~(Figure
 and virtual cameras are used to take pictures of the
 model~(Figure \ref{fig:plants}).}
 
-\tim{Comment: move this down}{The API was used to simulate a virtual scanner and generate images
+\tim{}{The API was used to simulate a virtual scanner and generate images
 for the training of neural networks. The focal, position, pan and
 tilt of the cameras are tunable and allow to generate images from
 different views. It is also possible to move the plant in the scanner.}
 
 \tim{The scene background }{The plant is placed in a virtual background. It} is a $360^{\circ}$
 \tim{real world picture}{image} and rendering it in blender reproduces the
-original scene lightning\tim{. In order to increase the complexity of the
+original scene lighting\tim{. In order to increase the complexity of the
 images acquired with the virtual scanner, s}{S}everal sets of backgrounds were
-used, without limitations on the lightning environement -- night, daylight,
+used, without limitations on the lighting environement -- night, daylight,
 sunset -- or the type of scene -- indoor or outdoor.
 
 
@@ -101,9 +106,9 @@ sunset -- or the type of scene -- indoor or outdoor.
     projection } \label{fig:pinhole}
 \end{figure}
 
-The \tim{ground truth plant part segmentation}{virtual labels} are acquired by rendering the plant material by material, with one material per
+The \tim{ground truth plant part segmentation is}{virtual labels are} acquired by rendering the plant material by material, with one material per
 \tim{plant part}{organ}~(Figure \ref{fig:plants}). The
-\tim{plant parts}{organs} considered for \textit{A. Thaliana} are leaf, stem, flower,
+\tim{plant parts}{organs} considered for \emph{A. Thaliana} are leaf, stem, flower,
 fruit and peduncle. \tim{As we will see later for the 3D reconstruction, i}{I}n the pinhole model \cite{} we use for 3D to 2D
 projection, a whole line in 3D projects onto a single pixel (Figure
 \ref{fig:pinhole}). As a consequence, a single pixel can belong to
@@ -253,7 +258,7 @@ crossentropy has more stable gradients, but the Dice loss is what we
 want to minimise, and is less sensitive to class imbalance.
 
 
-\paragraph{Fine-tuning.} Our network was trained on virtual \textit{A.
+\paragraph{Fine-tuning.} Our network was trained on virtual \emph{A.
 Thaliana} model but aims at reconstructing real plants. Therefore when
 the virtual plants fail at reproducing the complexity of real plants,
 the network can perform poorly. the network also fails when confronted
@@ -280,7 +285,7 @@ each masked view. If a voxel has projected onto the sculpture for each
 2D-view, it is part of the 3D-sculpture. Otherwise it is part of the
 background: voxel after voxel, the volume is carved into the shape of
 the object. The main limitation of this technique is that the problem
-is ill-posed and the reconstructed object will be a \textit{photo
+is ill-posed and the reconstructed object will be a \emph{photo
 hull} \cite{kutulakos_theory_1999} of the desired object, that is an
 object which is the union of all objects derivable from the multi-view
 observation. It can cause problems for highly curved or hollow objects,

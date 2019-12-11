@@ -14,12 +14,11 @@
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 \usepackage{xcolor}
-\usepackage{ulem}
 
 \begin{document}
 
-\newcommand\tim[2]{{\color{red}#1}{\sout{#2}}}
-\newcommand\alien[2]{{\color{blue}#1}{\sout{#2}}}
+\newcommand\tim[2]{{\color{red}#1}{\vphantom{#2}}}
+\newcommand\alien[2]{{\color{blue}#1}{\vphantom{#2}}}
 
 %%%%%%%%% TITLE
 \title{\LaTeX\ TITLE HERE }
