@@ -3,9 +3,9 @@ environmental variations, organs evolve in patterns which present great diversit
 both between species and among individuals of the same species. Automated
 reconstruction of plant structure from lab or in-field acquisitions remains a challenge in computer
 vision. The most common method for complex measurements of plant structure
-remains handmade measurements and image analysis is a major bottleneck in plant phenotyping
+remains handmade measurements\alien{, therefore}{and} image analysis is a major bottleneck in plant phenotyping
 \cite{minervini2015image}. The application of automated processing of plant structure are many: precise
-quantifying of biomass and yield for agricultural crops, estimation of environmental response
+\alien{quantification}{quantifying} of biomass and yield for agricultural crops, estimation of environmental response
 of crops~\cite{peirone2018assessing, srivastava2017drought},  mapping genotypes to
 phenotypes, estimating growth parameters of species, among other~\cite{denis1998symmetry}.
 
@@ -14,17 +14,17 @@ to be the state of the art method for many classification tasks. Several
 networks~\cite{ronneberger2015u, long2015fully} leverage huge classification datasets (ImageNet) to provide pixel by
 pixel semantic segmentation. They have been successfully used for plant organ
 segmentation \cite{shi2019plant}, but are still limited to simple case with a very
-small diversity in test datasets. Using simulated data to augment training
-datasets is a method which have shown to improve neural network performance in
+small diversity in test datasets.
+\alien{}{ Using simulated data to augment training
+datasets is a method which \alien{has}{have} shown to improve neural network performance in
 many fields, e.g~\cite{qiu2016unrealcv, alhaija2018augmented}.
-
 These recent progresses in image processing have made color image processing
 much more efficient than 3d point cloud data, for point cloud data is not as
 easy to process by convolutional neural networks as structured 2d pictures
-(ref.), and 3d voxel volume processing is very computionally expensive (ref. ).
+(ref.), and 3d voxel volume processing is very computionally expensive (ref. ). }
 
 The main bottleneck to uneable the power of convolutional neural network for segmentation
-tasks is the need for annotated data. Data annotation is a tedious and time-consuming process
+tasks is the need for annotated data \alien{representative of the task to accomplish}{}. Data annotation is a tedious and time-consuming process
 which is a constraint for small scale phenotyping problems. The use of generative
 models of plants to feed the machine learning algorithm is a well known method to
 reduce the need for hand annotated data.
@@ -36,14 +36,19 @@ They can be used to model arbitrary complex model of plants~\cite{boudon_l-py:_2
 
 In this work, we propose to use plant models to train convolutional neural network for
 identification of different plant organs in color images, as well as a
-reconstruction of the three dimensional structure of plants from these images.
+reconstruction of the three dimensional structure of plants from these images. \alien{Our method takes RGB images of a plant from different viewpoints as inputs, and outputs a 3d point cloud with each organ segmented}{}.
 The specific target application of our method is the identification of organs of the model
 plant Arabidopsis thaliana. We describe a way to train neural network on simulated models of
 plants in a variable environment rendered with Blender, as well as a simple method for
 fine-tuning on real word data. 
 
+
+\alien{Our method focuses on 2d-image processing rather than 3d-data}{} for point cloud data is not as
+easy to process by convolutional neural networks as structured 2d pictures
+(ref.), and 3d voxel volume processing is very computionally expensive (ref. ). \alien{The method also avoids the need for 3D data acquisition method as it relies on a RGB camera.}{}
+
 The paper is structured as follows: we begin by a first review of the related
 litterature. Then, we presend the two and three-dimensional segmentation methods
 as well as the simulation environments for virtual plants. A presentation of
-quantitative and qualititive results follow. We end the paper with perspectives
+quantitative and qualit\alien{a}{i}tive results follow. We end the paper with perspectives
 and discussions.

@@ -2,7 +2,7 @@
 To acquire plant images in a real world application scenario, we use a home made solution as a 3D
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
 custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
-A Sony RX0 camera is mounted on the camera mount and is controlled using a
+A Sony RX0 \alien{RGB }{}camera \alien{with $1920 \times 1060$ resolution}{} is mounted on the camera mount and is controlled using a
 Wifi interface. This allows for views from any point in space in a box containing
 the imaged plant. Figure~TODO illustrate resulting images from the described
 setup.}{}
@@ -57,9 +57,9 @@ different types of organs: fruit, stem, peduncle, leaf and flower.
 \end{figure}
 
 \tim{TODO: I think if we want to explain L-system, we have to
-provide a simple example with the associated rewriting rules}{}
+provide a simple example with the associated rewriting rules}{} \alien{pseudo-code of arabidopsis generation and corresponding images}{}
 
-\tim{Randomness can be added to the models by asigning different
+\tim{Randomness can be added to the models by assigining different
 probabilities to the set for rules. This allow to produce different
 looking individual plants from a single set of rules. Our L-py model
 for \emph{A. Thaliana} can be found online~\cite{}.}{}
