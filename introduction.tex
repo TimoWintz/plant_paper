@@ -16,7 +16,18 @@ pixel semantic segmentation. They have been successfully used for plant organ
 segmentation \cite{shi2019plant}, but are still limited to simple case with a very
 small diversity in test datasets. Using simulated data to augment training
 datasets is a method which have shown to improve neural network performance in
-many fields, e.g~\cite{qiu2016unrealcv}, \cite{alhaija2018augmented}.
+many fields, e.g~\cite{qiu2016unrealcv, alhaija2018augmented}.
+
+These recent progresses in image processing have made color image processing
+much more efficient than 3d point cloud data, for point cloud data is not as
+easy to process by convolutional neural networks as structured 2d pictures
+(ref.), and 3d voxel volume processing is very computionally expensive (ref. ).
+
+The main bottleneck to uneable the power of convolutional neural network for segmentation
+tasks is the need for annotated data. Data annotation is a tedious and time-consuming process
+which is a constraint for small scale phenotyping problems. The use of generative
+models of plants to feed the machine learning algorithm is a well known method to
+reduce the need for hand annotated data.
 
 Plant architecture is a well studied research topic, and many generative model
 of plant architecture have been developped in the last decades. Lindenmayer
@@ -24,10 +35,15 @@ systems are rewriting systems specifically developped to model plant growth.
 They can be used to model arbitrary complex model of plants~\cite{boudon_l-py:_2012}.
 
 In this work, we propose to use plant models to train convolutional neural network for
-identification of different plant organs in RGB images, as well as a
-reconstruction of the 3D structure of plants from these images. The specific target application of
-our method is the identification of organs of the model plant Arabidopsis
-thaliana. We describe a data augmentation model using plant models and HDRI
-pictures to produce ground truth images, as well as a simple method for
-fine-tuning on real word data. We then present qualitative results in various
-acquisition conditions to assert the robustness of our method. 
+identification of different plant organs in color images, as well as a
+reconstruction of the three dimensional structure of plants from these images.
+The specific target application of our method is the identification of organs of the model
+plant Arabidopsis thaliana. We describe a way to train neural network on simulated models of
+plants in a variable environment rendered with Blender, as well as a simple method for
+fine-tuning on real word data. 
+
+The paper is structured as follows: we begin by a first review of the related
+litterature. Then, we presend the two and three-dimensional segmentation methods
+as well as the simulation environments for virtual plants. A presentation of
+quantitative and qualititive results follow. We end the paper with perspectives
+and discussions.
