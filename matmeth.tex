@@ -129,49 +129,53 @@ images with plant part segmentation
 for the training of neural networks.}{}
 
 
-\paragraph{3D ground truth.} The 3D virtual plants were
-used to train and evaluate the 3D reconstruction. The
-virtual mesh is regularly subsampled with CloudCompare
-\cite{girardeau-montaut_cloudcompare-open_2011} in order to get
-a density matching the voxel density in the volume to carve (see
-space carving section for explanations). Then this 3D point cloud is
-voxellized and each voxel of the volume to carve acquires an organ
-class, or class 0 (background) if it is not part of the plant. Then
-the vector is saved in a sparse representation to save memory. For the
-trainings, the data generator reads the sparse vector and encodes it
-in a dense representation to compare it to the predicted classes. It
-is needed to densify it because PyTorch can't backpropagate easily
-through a sparse representation.
+% \paragraph{3D ground truth.} The 3D virtual plants were
+% used to train and evaluate the 3D reconstruction. The
+% virtual mesh is regularly subsampled with CloudCompare
+% \cite{girardeau-montaut_cloudcompare-open_2011} in order to get
+% a density matching the voxel density in the volume to carve (see
+% space carving section for explanations). Then this 3D point cloud is
+% voxellized and each voxel of the volume to carve acquires an organ
+% class, or class 0 (background) if it is not part of the plant. Then
+% the vector is saved in a sparse representation to save memory. For the
+% trainings, the data generator reads the sparse vector and encodes it
+% in a dense representation to compare it to the predicted classes. It
+% is needed to densify it because PyTorch can't backpropagate easily
+% through a sparse representation.
 
 %To train the classification on real plants, it was first considered
-to print a known plant model in 3D with Sculpteo, however the stem of
-the model wasn't thick enough and it buckled during the printing. We
-also considered to use an opensource dataset, however most segmented 3D
-dataset aimed for reconstruction are provided in Lidar or RGB-D data,
-and not from RGB to 3D. Therefore we decided to restrict ourselves to
-3D virtual plants. We also used the 3D reconstructed models with the
-initial space-carving approach implemented previously in the pipeline
-\cite{wintz_automated_nodate} for comparison.
+% to print a known plant model in 3D with Sculpteo, however the stem of
+% the model wasn't thick enough and it buckled during the printing. We
+% also considered to use an opensource dataset, however most segmented 3D
+% dataset aimed for reconstruction are provided in Lidar or RGB-D data,
+% and not from RGB to 3D. Therefore we decided to restrict ourselves to
+% 3D virtual plants. We also used the 3D reconstructed models with the
+% initial space-carving approach implemented previously in the pipeline
+% \cite{wintz_automated_nodate} for comparison.
 
 
-\paragraph{Image segmentation.} The objective of image segmentation is
-to convert an input image in a stack of probability map of the same
-dimension as the image. For C classes there will be C probability
+\paragraph{Image \tim{semantic}{} segmentation.} The objective of image \tim{semantic}{} segmentation is
+to convert an input image in a stack of probability maps of the same
+dimension as the image. \tim{If $C$ is the number of different classes,
+semantic segmentation produces $C$ output images with values between $0$ and $1$,
+giving for each pixel of the input image the probability of that pixel
+belonging to the corresponding class.}{For C classes there will be C probability
 maps, each corresponding to one class. The value of a pixel in the
 probability map of class k is the probability that this pixel belongs
-to the organ-type k in the original image.
+to the organ-type k in the original image.}
 
 
-The image segmentation was performed using segmentation convolutional
-neural network \cite{guo_review_2018}. Such segmentation networks
-are based on a contracting structure from an image to a low dimension
-feature space, which encodes the content of the image. It is branched
+\tim{To produce such semantic probability maps, we used a segmentation
+convolutional neural network~\cite{guo_review_2018}}{The image segmentation was performed using segmentation convolutional
+neural network \cite{guo_review_2018}}. \tim{These}{Such} segmentation networks
+are based on a contracting structure from an image to a low dimension\tim{al}{}
+feature space, \tim{called the \emph{latent space}}{}, which encodes the content of the image. It is branched
 to a symmetric expanding structure that translates the information from
 the feature space to an image similar to the original one, but with
 only the content of interest reconstructed. The contracting structure
 is directly inspired from classification neural networks, and made
 of convolution layers, non-linearities and down-pooling layers. The
-convolution kernels allow to filter the information to emphasise
+convolution kernels allow to filter the information to emphasize
 the content, and the down-pooling allows to reduce the dimension
 of the information. The expanding structure reproduces the path in
 the other direction, with up-pooling layers and convolutions. The
@@ -184,17 +188,18 @@ by providing the down-pooling coordinates from the contracting phase.
     \cite{ronneberger_u-net:_2015}} \label{fig:unet}
 \end{figure}
 
-The structure tested was inspired from
-U-Net~\cite{ronneberger_u-net:_2015}, however the contracting
+\tim{We decided to use a neural network architecture inspired by}{The structure tested was inspired from}
+U-Net~\cite{ronneberger_u-net:_2015}. However \tim{, to leverage the power of
+already existing labeled datasets}{}, the contracting
 structure, or encoder, was replaced by a classification network trained
-on ImageNet, and with 6 classes to segment. This classification
-structure has already been trained to encode the semantic
-representation of an image in the latent space. We tested ResNet
-\cite{he_deep_2015} which is a deep neural network where inputs
+on ImageNet, and with six classes to segment. \tim{Thanks to the great diversity
+in the ImageNet dataset, t}{T}his classification
+structure has already \tim{learned}{been trained} to encode the semantic
+representation of an image in the latent space. \tim{The classification network that we used is}{We tested}
+ResNet~\cite{he_deep_2015} which is a deep neural network where inputs
 from previous layers are regularly reinjected into deeper layers
 in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
-
 
 \paragraph{Deep learning training} The network was trained with
 images from the virtual scanner. TODO(Describe the path, dimension
