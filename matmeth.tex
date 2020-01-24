@@ -43,30 +43,30 @@ comprises:
     replaced by a \emph{successor}.
 \end{itemize}
 
-The strings can then be represented graphically in 3D using OpenAlea's
-PlantGL (Figure\ref{fig:lpy}). The A. Thaliana models comprised 5
-different types of organs: fruit, stem, peduncle, leaf and flower.
-
-\begin{figure}[h!]
-    \centering \includegraphics[width =
-    0.1\linewidth]{figures/blank.png} \caption{Left: Example of an
-    L-Py system with two modules, right: Visual representation of the
-    first five steps of the L-system comprising apex (green dots)
-    and internodes (brown sticks) in the vocabulary. Figure from
-    \cite{boudon_l-py:_2012}} \label{fig:lpy}
-\end{figure}
-
-\tim{TODO: I think if we want to explain L-system, we have to
-provide a simple example with the associated rewriting rules}{} \alien{pseudo-code of arabidopsis generation and corresponding images}{}
-
 \tim{Randomness can be added to the models by assigining different
 probabilities to the set for rules. This allow to produce different
 looking individual plants from a single set of rules. Our L-py model
 for \emph{A. Thaliana} can be found online~\cite{}.}{}
 
+The strings can then be represented graphically in 3D using OpenAlea's
+PlantGL (Figure\ref{fig:lpy}). Figure~\ref{fig:lpy} illustrates a virtual specimen
+of A. Thaliana obtained using the lpy generative model at different timesteps.
+
+The A. Thaliana models comprised 5 different types of organs: fruit, stem, peduncle, leaf and flower.
+
+\begin{figure}[h!]
+    \centering \includegraphics[width = 0.3\linewidth]{figures/10d.png}\hspace{1em}\includegraphics[width = 0.3\linewidth]{figures/20d.png}
+
+    \vspace{0.9em}
+    \includegraphics[width = 0.3\linewidth]{figures/30d.png}\hspace{1em}\includegraphics[width = 0.3\linewidth]{figures/40d.png}
+    \caption{An example of simulated \emph{Arabidopsis thaliana} using L-py. The four figures are representation of the same
+    simulation after 240 (top left), 480 (top right), 720 (bottom left) and 960 (bottom right) iterations of the
+    L-system.} \label{fig:lpy}
+\end{figure}
+
+
 \tim{The generated plant models are exported as meshes using the
 standard OBJ format.}{}
-
 
 \paragraph{Virtual scanner.} \tim{The open source software
 Blender~\cite{blender} was chosen for the rendering part. The blender
@@ -87,18 +87,18 @@ model around the plant, as we would on the real world setup~(Figure
 and virtual cameras are used to take pictures of the
 model~(Figure \ref{fig:plants}).}
 
-\tim{}{The API was used to simulate a virtual scanner and generate images
-for the training of neural networks. The focal, position, pan and
-tilt of the cameras are tunable and allow to generate images from
-different views. It is also possible to move the plant in the scanner.}
+To further increase the diversity of the simulated dataset and prevent
+overfitting on the chosen plant textures, random colors are taken
+from a reference image and applied as the base color of the plant material.
 
 \tim{The scene background }{The plant is placed in a virtual background. It} is a $360^{\circ}$
 \tim{real world picture}{image} and rendering it in blender reproduces the
 original scene lighting\tim{. In order to increase the complexity of the
 images acquired with the virtual scanner, s}{S}everal sets of backgrounds were
 used, without limitations on the lighting environement -- night, daylight,
-sunset -- or the type of scene -- indoor or outdoor.
-
+sunset -- or the type of scene -- indoor or outdoor. A simulated flash light is
+triggered with a random level of intensity to simulate different artifical lighting condition during the
+acquisition of real life pictures.
 
 \begin{figure}[h]
     \centering \includegraphics[width=0.1\linewidth]{figures/blank.png}
@@ -121,8 +121,6 @@ ground truth image for each class.
     \caption{Example of virtual training images and all labels}
     \label{fig:plants}
 \end{figure}
-
-TODO: add change text after Christophe new plants, add random colors
 
 \tim{The virtual scanner was used to generate a training dataset of plant
 images with plant part segmentation 
