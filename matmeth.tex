@@ -272,25 +272,62 @@ of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
 
 
-\paragraph{Space Carving.} We used space-carving to reconstructi
-the palnts in 3D from the 2D images. The space carving
-\cite{kutulakos_theory_1999} is a photogrammetric approach which uses
-pictures of an object from different point of views to reconstruct
-an object in 3D. To simplify the explanation we will take the example
-of the original space carving paper \cite{kutulakos_theory_1999}. Let
-the objective be to reconstruct a sculpture in 3D. The cameras circle
-a volume of interest that contains the cube and take $N$ pictures
-at regular intervals. Each picture will be pre-processed, with a
-masking step: on each image the mask will give the probability that
-the pixel belongs or not to the sculpture. Then, the surrounded volume
-is computed virtually, and each voxel of the volume is projected onto
-each masked view. If a voxel has projected onto the sculpture for each
-2D-view, it is part of the 3D-sculpture. Otherwise it is part of the
-background: voxel after voxel, the volume is carved into the shape of
-the object. The main limitation of this technique is that the problem
-is ill-posed and the reconstructed object will be a \emph{photo
-hull} \cite{kutulakos_theory_1999} of the desired object, that is an
-object which is the union of all objects derivable from the multi-view
-observation. It can cause problems for highly curved or hollow objects,
-but in the case of plants it is not a major limitation.
+% \paragraph{Space Carving.} We used space-carving to reconstructi
+% the palnts in 3D from the 2D images. The space carving
+% \cite{kutulakos_theory_1999} is a photogrammetric approach which uses
+% pictures of an object from different point of views to reconstruct
+% an object in 3D. To simplify the explanation we will take the example
+% of the original space carving paper \cite{kutulakos_theory_1999}. Let
+% the objective be to reconstruct a sculpture in 3D. The cameras circle
+% a volume of interest that contains the cube and take $N$ pictures
+% at regular intervals. Each picture will be pre-processed, with a
+% masking step: on each image the mask will give the probability that
+% the pixel belongs or not to the sculpture. Then, the surrounded volume
+% is computed virtually, and each voxel of the volume is projected onto
+% each masked view. If a voxel has projected onto the sculpture for each
+% 2D-view, it is part of the 3D-sculpture. Otherwise it is part of the
+% background: voxel after voxel, the volume is carved into the shape of
+% the object. The main limitation of this technique is that the problem
+% is ill-posed and the reconstructed object will be a \emph{photo
+% hull} \cite{kutulakos_theory_1999} of the desired object, that is an
+% object which is the union of all objects derivable from the multi-view
+% observation. It can cause problems for highly curved or hollow objects,
+% but in the case of plants it is not a major limitation.
 
+\paragraph{Backprojection. } To reconstruct the 3D model from segmented 2D
+pictures, we use a backprojection algorithm. It is an algorithm similar to 
+the classical space carving algorithm~\cite{kutulakos_theory_1999}, which computes a 3D visual hull from
+projections of binary masks of an object on 2D views.
+
+Camera poses and intrinsic
+parameters are either estimated using a structure from motion algorithm -- in
+this work, we used the open source software Colmap~\cite{schoenberger2016mvs,
+schoenberger2016sfm} -- or, in the case of simulated images, they are provided
+as ground truth image metadata. If $N$ is the number of views taken for a given plant
+scan, we thus have projection models $\pi_i,i \in \{1,\cdots, N\}$,
+such that for any point $x \in \mathbb{R}^3$ of the world, $\pi_i ({x})$ is the
+pixel coordinate of point ${x}$ in view $i$. Let $\Omega = [0,w]
+\times [0,h]$ be the pixel domain for each image, and
+
+$$
+I(x) = \{ i \in
+\{1,\cdots, N \} : \pi_i(x) \in \Omega \}
+$$
+be the set of views for which point
+$x$ projects inside the pixel domain of the corresponding image. Then, for each
+class $k \in \{ 1,\cdots, C \}$, the score $p_k(x)$ of class $k$ is given as:
+
+$$
+\log p_k(x) = \sum_{i\in I(x)} \log ( p_{i,k} (\pi_i(x) ),
+$$
+where $p_{i,k} (y)$ is the output of the segmentation network in the $i$th view
+at pixel $y$.
+
+Intuitively, it gives the log probability of any given class, assuming that the
+probabilities for each of the classes projected on the images are independent
+random variables.
+
+The space is discretized into a fixed size voxel grid, and $p_k$ is computed at every
+point of the grid. Then, the corresponding voxel is attributed the class which
+yields the highest score. To convert the voxel grid into a labeled point cloud,
+we use a level set algorithm~\ref{TODO algorithm}.
