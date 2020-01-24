@@ -330,4 +330,28 @@ random variables.
 The space is discretized into a fixed size voxel grid, and $p_k$ is computed at every
 point of the grid. Then, the corresponding voxel is attributed the class which
 yields the highest score. To convert the voxel grid into a labeled point cloud,
-we use a level set algorithm~\ref{TODO algorithm}.
+we use a level set algorithm~\ref{algorithm:pcdn}. The signed distance function is computed using a
+fast marching algorithm in scipy~\ref{scipy}.
+
+\begin{algorithm}
+    \caption{From voxel grid to point cloud}
+    \label{algorithm:pcdn}
+    \begin{algorithmic}[1]
+        \Function{PointCloud}{V}
+        \State $D \gets \Call{SignedDistance}{V == 1}$
+        \State $\nabla D \gets \Call{Gradient}{D}$
+        \State $points \gets []$
+        \State $normals \gets []$
+        \For{$v \in V : |D[v]| < \sqrt{2} / 2$ }
+
+        \Comment{Loop on all boundary points.}
+            \State $n \gets \nabla D [v] / \Vert \nabla D [v] \Vert$
+            \State $v_1 \gets v + D[v] * n$
+            \State $\Call{Append}{points, v_1}$
+            \State $\Call{Append}{normals, n}$
+        \EndFor{}
+        \State \textbf{return} $points, normals$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
