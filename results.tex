@@ -1,1 +1,56 @@
-Hello
+\paragraph{Testing methods.} The test data is composed of four
+distinct datasets:
+\begin{enumerate}[A.]
+    \item A simulated dataset similar to the training dataset (14 different individuals, 1008 images)
+    \item A small annotated set of plants from real Arabidopsis thaliana (4 different individuals, 6 images);
+    \item A larger set of real Arabidopsis thaliana for qualitative evaluation (12 different indivudals, 864 images);
+    \item A set of real images from another plant (tomato) to evaluate the possibility of transfering the learning onto other species of plants (TODO).
+\end{enumerate}
+All datasets will be available there: TODO.
+
+Evaluation is done both on the 2D segmentation and on the resulting segmented 3D point cloud. For datasets A and B,
+we present a class by class quantitative evaluation of the 2D segmentation method. For dataset A, we additionally  provide
+class by class quantitative evaluation of the 3D voxel segmentation, as well as a comparison of output point clouds
+to the ground truth given by L-Py. For dataset C, we provide qualitative assessment of the results of the segmentation,
+both in 2D and in 3D. For dataset D, we restrict ourselves to qualitative evaluation of the 2D segmentation.
+
+The background class is not considered as a class in itself in the evaluation, but is presented in the qualitative example. It
+is only used for contrast when reconstructing point cloud from voxel data.
+
+\paragraph{2D Segmentation.}
+Images from datasets A are segmented used the trained neural network. Then, the results of 2D segmentation are
+compared to the ground truth provided by the blender simulation. Figure~\ref{fig:seg2d_res} presents a sample from
+dataset A and its segmentation.
+
+\begin{figure}[h!]
+    \centering \includegraphics[width = 0.25\linewidth]{figures/00000_rgb.png}\quad
+    \includegraphics[width = 0.25\linewidth]{figures/000_background.png}\quad
+    \includegraphics[width = 0.25\linewidth]{figures/000_flower.png}
+
+    \vspace{1em}
+
+    \includegraphics[width = 0.25\linewidth]{figures/000_fruit.png}\quad
+    \includegraphics[width = 0.25\linewidth]{figures/000_leaf.png}\quad
+    \includegraphics[width = 0.25\linewidth]{figures/000_pedicel.png}
+    \caption{Images segmented with our network. From left to right, then top to bottom: original image,
+        background, flower, fruit, leaf, pedicel. White indicates a high score (1.0) for the class,
+        black indicates a low score (0.0).} \label{fig:seg2d_res}
+\end{figure}
+
+\paragraph{3D Segmentation.}
+
+\paragraph{Qualitative evaluation on real plants.}
+
+\begin{figure}[h!]
+    \centering \includegraphics[width = \linewidth]{figures/real_scans.png}
+    \caption{Sample images from the dataset used for qualitative assessment of the method on real data} \label{fig:realscans}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering \includegraphics[width = \linewidth]{figures/3drec.png}
+    \caption{3D reconstruction of real plants. Red: stem, green: leaf, white: pedicel, purple: fruit:, yellow: flower} \label{fig:rec3d}
+\end{figure}
+
+\paragraph{Transfer to other species.}
+
+
