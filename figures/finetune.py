@@ -12,7 +12,7 @@ import imageio
 import argparse
 import matplotlib.gridspec as gridspec
 
-default_path = '/home/alienor/Documents/training2D/data/dataset_gl_png/train/000018'
+default_path = '/home/alienor/Documents/database/tomato_paper/'
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
@@ -26,12 +26,12 @@ args = parser.parse_args()
 
 path = args.config
 
-classes = ['background', 'stem', 'leaf', 'fruit', 'pedicel']
+classes = ['background', 'stem', 'leaf', 'pedicel']
 
-image_path = '/images/00001_rgb.png'
+image_path = '/images/0.jpg'
 labels_path = {}
 for c in classes: 
-    labels_path[c] = '/images/00001_%s.png'%c
+    labels_path[c] = '/Segmentation2D_896_896_ModelFileset_2513428f8c/000_%s.png'%c
 
 
 g = alien.showclass()
@@ -42,9 +42,12 @@ image = imageio.imread(path + image_path)
 figure = [image]
 
 
-for c in classes:
+for c in ['background','stem', 'leaf']:
+    if c == 'stem':
+        label = imageio.imread(path + labels_path[c]) + imageio.imread(path + labels_path['pedicel'])
+    else: 
         label = imageio.imread(path + labels_path[c])
-        figure.append(label)
+    figure.append(label)
 
 
 g.title_list = None#['Image' , 'Flower', 'Peduncle', 'Stem', 'Leaf', 'Fruit']
@@ -55,7 +58,6 @@ g.figsize = (14.9,10)
 g.fontsize = 20
 g.extension = ".png"
 
-g.save_name = 'Images_and_labels'
-g.col_num = 3
+g.col_num = 2
 #g.showing(figure)
 g.saving(figure)

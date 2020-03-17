@@ -47,9 +47,6 @@ directory_dataset = path + direc['directory_dataset']
 
 param2 = param_pipe['Segmentation2D']
 model_name = param2["model_name"]
-model_segmentation_name = param2["model_segmentation_name"]
-
-label_names = param2['labels'].split(',')
 
 
 Sx = param2['Sx']
@@ -61,6 +58,7 @@ batch_size = 6
 learning_rate = param2['learning_rate']
 
 path_train = directory_dataset + '/train/'
+print(path_train)
 
 image_train, target_train = init_set('', path_train)
 
@@ -69,7 +67,7 @@ trans = transforms.Compose([
                             transforms.ToTensor(),
                             ])
 
-train_dataset = Dataset_im_label(image_train, target_train, transform = trans)
+train_dataset = Dataset_im_label(image_train, target_train, size = (Sx, Sy), path = path_train)
 
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
@@ -83,7 +81,7 @@ label = all_data[1]
 #plot 4 images to visualize the data
 images_tot = []
 titles_tot = []
-for i in range(min(batch_size, len(label_names))):
+for i in range(min(batch_size, 6)):
     img = images[i]
     img = img.permute(1, 2, 0)
     images_tot.append(img)
@@ -93,6 +91,7 @@ g.save_folder = ''
 g.spacing = 0.02
 g.figsize = (14.9,10)
 g.fontsize = 20
+g.extension = ".png"
 g.save_name = 'vscan_sample'
 g.col_num = 3
 #g.showing(figure)

@@ -1,13 +1,12 @@
-\tim{\paragraph{Target applicative setup.}
+\paragraph{Target applicative setup.}
 To acquire plant images in a real world application scenario, we use a home made solution as a 3D
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
 custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
-A Sony RX0 \alien{RGB }{}camera \alien{with $1920 \times 1060$ resolution}{} is mounted on the camera mount and is controlled using a
-Wifi interface. This allows for views from any point in space in a box containing
+A Sony RX0 \alien{RGB }{}camera \alien{with $1920 \times 1060$ resolution}{} is mounted on the camera mount and is controlled using a Wifi interface. This allows for views from any point in space in a box containing
 the imaged plant. Figure~TODO illustrate resulting images from the described
-setup.}{}
+setup.
 
-\paragraph{\tim{Generative plant models.}{Virtual plants.}}
+\paragraph{Virtual plants.}
 
 The \tim{generative plant models}{virtual plants} were designed with
 OpenAlea~\cite{pradal2009plantgl}. OpenAlea is an open source software
@@ -52,7 +51,7 @@ The strings can then be represented graphically in 3D using OpenAlea's
 PlantGL (Figure\ref{fig:lpy}). Figure~\ref{fig:lpy} illustrates a virtual specimen
 of A. Thaliana obtained using the lpy generative model at different timesteps.
 
-The A. Thaliana models comprised 5 different types of organs: fruit, stem, peduncle, leaf and flower.
+The A. Thaliana models comprised 5 different types of organs: fruit, stem, \alien{peduncle}{pedicel}, leaf and flower.
 
 \begin{figure}[h!]
     \centering \includegraphics[width = 0.3\linewidth]{figures/10d.png}\hspace{1em}\includegraphics[width = 0.3\linewidth]{figures/20d.png}
@@ -117,7 +116,7 @@ labelling method takes this plurality into account by generating a
 ground truth image for each class.
 
 \begin{figure}[h]
-    \centering \includegraphics[width=0.1\linewidth]{figures/blank.png}
+    \centering \includegraphics[width = 0.9\linewidth]{figures/Images_and_labels.png}
     \caption{Example of virtual training images and all labels}
     \label{fig:plants}
 \end{figure}
@@ -152,7 +151,7 @@ for the training of neural networks.}{}
 % \cite{wintz_automated_nodate} for comparison.
 
 
-\paragraph{Image \tim{semantic}{} segmentation.} The objective of image \tim{semantic}{} segmentation is
+\paragraph{Image segmentation.} The objective of image \tim{semantic}{} segmentation is
 to convert an input image in a stack of probability maps of the same
 dimension as the image. \tim{If $C$ is the number of different classes,
 semantic segmentation produces $C$ output images with values between $0$ and $1$,
@@ -200,20 +199,24 @@ in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
 
 \paragraph{Deep learning training} The network was trained with
-images from the virtual scanner. TODO(Describe the path, dimension
-of the images). The dataset comprised TODO(Number of images). To make
-the network robust to images and lignting conditions that are not in
-the dataset, we artificially augment the dataset by adding TODO(add
-gaussian noise, change contrast, rotation, déformation, more?).
+images from the virtual scanner. \alien{TODO(Describe the path, dimension
+of the images). The dataset comprised TODO(Number of images)}{The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity.} To make the network robust to images and lignting conditions that are not in
+the dataset, we artificially augment the dataset by adding \alien{TODO(add
+gaussian noise, change contrast, rotation, déformation, more?).}{gaussian noise ($\sigma$ = 0.01) and random rotations. The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$)}. 
 The dataset was split into 3 sets:
 
 \begin{itemize}
-    \item a training set to train the network (50\% of the dataset)
+    \item a training set to train the network (70\% of the dataset)
     \item a validation set on which the network is not trained and
-    is used to evaluate and compare the different networks (25\%
+    is used to evaluate and compare the different networks (7\%
     of the dataset) \item a test set used at the very end on the
-    selected architecture (25\% of the dataset)
+    selected architecture (23\% of the dataset)
 \end{itemize}
+
+\begin{figure}[h!]
+	\centering \includegraphics[width = 0.9\linewidth]{figures/vscan_sample.png}
+	\caption{Sample of the training set (before normalization)} \label{fig:trainset}
+\end{figure}
 
 
 To evaluate the segmentation of the images, a combination of
@@ -262,14 +265,15 @@ want to minimise, and is less sensitive to class imbalance.
 
 
 \paragraph{Fine-tuning.} Our network was trained on virtual \emph{A.
-Thaliana} model but aims at reconstructing real plants. Therefore when
+Thaliana} model but aims at reconstructing real plants. \alien{Therefore when
 the virtual plants fail at reproducing the complexity of real plants,
-the network can perform poorly. the network also fails when confronted
-to other plant species with very different traits. Therefore we
+the network can perform poorly. The network also fails when confronted
+to other plant species with very different traits.}{Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. } Therefore we
 conceived a simple interface that allows the user to manually label a
-few images of interest (three images is enough), then run the training
+few images of interest (two or three images is enough), then run the training
 of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
+\alien{}{The interface uses LabelMe \cite{} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for this new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.}
 
 
 % \paragraph{Space Carving.} We used space-carving to reconstructi

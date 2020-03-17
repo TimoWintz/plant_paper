@@ -52,5 +52,12 @@ dataset A and its segmentation.
 \end{figure}
 
 \paragraph{Transfer to other species.}
+To transfer to species anatomically different from \emph{A. Thaliana} we used model finetuning. This step requires a minimal number of manually annotated images (2 or 3) of the other species and allows to reconstruct the full model in 3D. To test the finetuning method we took a video turning around a tomato plant and sampled 41 images equally distributed along the video to get images from different viewpoints. Then 2 images were manually annotated with our interface. We included only the two classes present: stem and leaf. Then the network trainied on virtual \emph{A. Thaliana} was trained on these two images for 20 epochs. Then we ran the 2D segmentation (Figure \ref{fig:finetune2D}) 3D reconstruction pipeline and obtained a 3D model of the tomato.
+
+\begin{figure}[h!]
+    \centering \includegraphics[width = \linewidth]{figures/finetune.png}
+    \caption{Predictions of the model finetuned on two images of tomato manually annotated.} \label{fig:finetune2D}
+\end{figure}
+
 
 
