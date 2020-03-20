@@ -1,0 +1,82 @@
+{
+    "flower": {
+        "Segmentation2DEvaluation": {
+            "tp": 1359,
+            "fp": 2091,
+            "tn": 54971417,
+            "fn": 6253,
+            "precision": 0.3939130434782609,
+            "recall": 0.17853389385181292
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+        }
+    },
+    "fruit": {
+        "Segmentation2DEvaluation": {
+            "tp": 108576,
+            "fp": 33411,
+            "tn": 54773032,
+            "fn": 66101,
+            "precision": 0.7646897251156796,
+            "recall": 0.6215815476565317
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+        }
+    },
+    "leaf": {
+        "Segmentation2DEvaluation": {
+            "tp": 47932,
+            "fp": 37909,
+            "tn": 53107955,
+            "fn": 42044,
+            "precision": 0.5583811931361471,
+            "recall": 0.532719836400818
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+        }
+    },
+    "pedicel": {
+        "Segmentation2DEvaluation": {
+            "tp": 51113,
+            "fp": 24357,
+            "tn": 54852359,
+            "fn": 53291,
+            "precision": 0.6772624884059891,
+            "recall": 0.48956936515842303
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+        }
+    },
+    "stem": {
+        "Segmentation2DEvaluation": {
+            "tp": 94224,
+            "fp": 15224,
+            "tn": 54790998,
+            "fn": 80674,
+            "precision": 0.8609019808493531,
+            "recall": 0.5387368637720271
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 0,
+            "fn": 0
+        }
+    }
+}

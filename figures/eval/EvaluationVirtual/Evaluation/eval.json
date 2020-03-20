@@ -1,0 +1,92 @@
+{
+    "flower": {
+        "Segmentation2DEvaluation": {
+            "tp": 219700,
+            "fp": 53505,
+            "tn": 462102744,
+            "fn": 46067,
+            "precision": 0.8041580498160722,
+            "recall": 0.8266639575267057
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 19428,
+            "fp": 4688,
+            "tn": 629173,
+            "fn": 17298,
+            "precision": 0.8056062365234699,
+            "recall": 0.5289985296520177
+        }
+    },
+    "fruit": {
+        "Segmentation2DEvaluation": {
+            "tp": 2321140,
+            "fp": 483126,
+            "tn": 863836476,
+            "fn": 400538,
+            "precision": 0.8277174847179262,
+            "recall": 0.8528341706844087
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 182842,
+            "fp": 27669,
+            "tn": 1289712,
+            "fn": 21876,
+            "precision": 0.8685626879355474,
+            "recall": 0.8931408083314608
+        }
+    },
+    "leaf": {
+        "Segmentation2DEvaluation": {
+            "tp": 4341722,
+            "fp": 108723,
+            "tn": 573136451,
+            "fn": 440624,
+            "precision": 0.9755703081377256,
+            "recall": 0.9078644665191519
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 995620,
+            "fp": 50473,
+            "tn": 338570,
+            "fn": 1524,
+            "precision": 0.9517509437497431,
+            "recall": 0.9984716349895301
+        }
+    },
+    "pedicel": {
+        "Segmentation2DEvaluation": {
+            "tp": 1585932,
+            "fp": 513846,
+            "tn": 864636303,
+            "fn": 305199,
+            "precision": 0.7552855587590688,
+            "recall": 0.8386156220801203
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 108219,
+            "fp": 29662,
+            "tn": 1364037,
+            "fn": 20181,
+            "precision": 0.7848724624857667,
+            "recall": 0.8428271028037383
+        }
+    },
+    "stem": {
+        "Segmentation2DEvaluation": {
+            "tp": 1671737,
+            "fp": 362558,
+            "tn": 864824825,
+            "fn": 182160,
+            "precision": 0.8217770775624971,
+            "recall": 0.901742114044092
+        },
+        "PointCloudSegmentationEvaluation": {
+            "tp": 94108,
+            "fp": 9390,
+            "tn": 1357598,
+            "fn": 61003,
+            "precision": 0.9092736091518677,
+            "recall": 0.6067139016575227
+        }
+    }
+}
