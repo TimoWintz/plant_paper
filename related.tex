@@ -1,23 +1,29 @@
-Many existing works provide ad-hoc image analysis methods for specific plant
+
+\alien{}{Many existing works provide ad-hoc image analysis methods for specific plant
 phenotyping scenarios, for example stem angle
 estimation~\cite{das2017automated}, 3d plant shoot
 reconstruction~\cite{scharr2017fast}, ... Generic geometric approaches can deal
 with a large variety of plant structure~\cite{reeb2018quantification} but are restricted in terms of robustness to
-occlusions.
-
-Simulated rendering of plants for semantic segmentation have already
+occlusions. Simulated rendering of plants for semantic segmentation have already
 been developed, e.g.~\cite{duboudin_toward_2019} but to the authors' knowledge
 they don't account for plant geometry in the learning process. This limits applications
-to simple identification of scene objects relying on texture and basic shape only.
-
-TODO: Blabla general 2D image segmentation.
-
-TODO: Blabla general 3D segmentation.
+to simple identification of scene objects relying on texture and basic shape only.TODO: Blabla general 2D image segmentation.
+TODO: Blabla general 3D segmentation.}
 
 %Instruments: RGB-D, Lidar, Laser, kinect -> RGB
 %Segmentation method: 2D-3D
 %Applications:?
 % 
-\alien{TODO: Shi Koostra vs. us:
-large variety of plants, user adaptation, complexity of plants, works on real plants}{}
+\alien{}{TODO: Shi Koostra vs. us:
+large variety of plants, user adaptation, complexity of plants, works on real plants}
 % see CVPPP2018 review of article
+
+
+\alien{The problem we address tackles 3D segmentation and reconstruction of plants at individual level. The main fields of application  are experimental phenotyping in laboratories for phenomics and crop improvement \cite{tisne_phenoscope:_2013,perez-sanz_plant_2017}, as well as in-field monitoring of highly valuable crops \cite{hoffmann_fluorescence_2015, fiorani_future_2013}. The common approach in phenotyping is through 2D-imaging for it is fast, accessible and non-invasive. It allows to retrieve health-status, stress response and growth information through RGB images, fluorescence and spectral images \cite{li_review_2014}. However due to the highly complex architecture of the plants, 3D information is necessary to monitor more specific traits like organ volume, phyllotaxis. \\
+There are several possible methods to reconstruct a plant in 3D. First set of possibility is active reconstruction with lasers. LIDARs (Light Detection and Ranging) have been used to reconstruct plants in 3D to monitor growth and height \cite{garrido_3d_2015}. This method is sensitive to noise and time consuming as it has to scan the whole object point by point. It is also very sensitive to movement since its measure depends on travel length. A variation of LIDAR is laser light section scanner which projects a line on the plant instead of a point, allowing a faster reconstruction. It can be used to monitor plant spacing for example \cite{shi_automatic_2013}. \\
+Another method is to project structured light on the plant. The deformation of the structure on the plants allows to compute the 3D depth of the scene. A sensor often used for this technique on plants is kinect \cite{paulus_low-cost_2014, nguyen_structured_2015}, but it is poorly resolved and sensitive to sunlight.\\
+3D reconstruction can also be achieved from multi-view 2D images. One method, Structure-from-motion, is to identify key-points from an image to another to reconstruct the plant in 3D such as corn in a field \cite{sodhi_-field_2017}. Another 2D-based method, space carving, method \cite{kutulakos_theory_1999} has already been used to reconstruct plants in 3D \cite{schonberger_structure--motion_2016} and it is the one we explored.\\
+In the previously cited methods when a paper suggests a segmentation method, it is usually directly on the 3D data and not on the RGB images \cite{santos_automatic_nodate-1}. Yet a few papers report the use of 2D-image segmentation as the basis of the 3D segmentation. From different points of view it is possible to acquire a 3D representation of the plant, and by segmenting the images, it is possible to acquire a 3D segmented representation of the plant. The 2D pixel-wise image segmentation is achieved with machine learning and computer vision neural-networks. This approach has been suggested by \cite{kalogerakis_3d_2017} on the dataset ShapeNetCore, and an inspired approach has been presented in the context of plant phenotyping \cite{shi_plant-part_2019}. As an improvement we present an approach relying in more recent and efficient 2D segmentation neural network and exploiting an artificially-generated plant dataset of images which allows to by-pass the challenge of manual data-annotation.\\
+ Simulated rendering of plants for semantic segmentation have already been developed, e.g.~\cite{duboudin_toward_2019, ward_deep_2018} but to the authors' knowledge they don't account for plant 3D geometry in the learning process. This limits applications to simple identification of scene objects relying on texture and basic shape only. }{}
+
+
