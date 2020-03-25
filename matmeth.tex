@@ -197,7 +197,7 @@ from previous layers are regularly reinjected into deeper layers
 in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
 
-\paragraph{Deep learning training} The network was trained with
+\paragraph{Training from simulated data.} The network was trained with
 images from the virtual scanner. \alien{The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity.}{TODO(Describe the path, dimension of the images). The dataset comprised TODO(Number of images)} To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding \alien{gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$)}{TODO(add gaussian noise, change contrast, rotation, déformation, more?).}. 
 The dataset was split into 3 sets:
 
@@ -271,67 +271,71 @@ of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
 \alien{The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.}{}
 
-
-% \paragraph{Space Carving.} We used space-carving to reconstructi
-% the palnts in 3D from the 2D images. The space carving
-% \cite{kutulakos_theory_1999} is a photogrammetric approach which uses
-% pictures of an object from different point of views to reconstruct
-% an object in 3D. To simplify the explanation we will take the example
-% of the original space carving paper \cite{kutulakos_theory_1999}. Let
-% the objective be to reconstruct a sculpture in 3D. The cameras circle
-% a volume of interest that contains the cube and take $N$ pictures
-% at regular intervals. Each picture will be pre-processed, with a
-% masking step: on each image the mask will give the probability that
-% the pixel belongs or not to the sculpture. Then, the surrounded volume
-% is computed virtually, and each voxel of the volume is projected onto
-% each masked view. If a voxel has projected onto the sculpture for each
-% 2D-view, it is part of the 3D-sculpture. Otherwise it is part of the
-% background: voxel after voxel, the volume is carved into the shape of
-% the object. The main limitation of this technique is that the problem
-% is ill-posed and the reconstructed object will be a \emph{photo
-% hull} \cite{kutulakos_theory_1999} of the desired object, that is an
-% object which is the union of all objects derivable from the multi-view
-% observation. It can cause problems for highly curved or hollow objects,
-% but in the case of plants it is not a major limitation.
-
-\paragraph{Backprojection. } To reconstruct the 3D model from segmented 2D
-pictures, we use a backprojection algorithm. It is an algorithm similar to 
-the classical space carving algorithm~\cite{kutulakos_theory_1999}, which computes a 3D visual hull from
-projections of binary masks of an object on 2D views.
-
-Camera poses and intrinsic
-parameters are either estimated using a structure from motion algorithm -- in
+\paragraph{Structure from motion.} To map points in space to their location in each
+individual pictures, one has to know the precise intrinsic camera models as well
+as the exact position of cameras in space. In a simulation environment,
+these can be computed and stored as picture metadata, but it is rather
+challenging to perfectly calibrate a camera arm in real world scenarios. Thus,
+we propose to obtain camera poses using a structure from motion algorithm -- in
 this work, we used the open source software Colmap~\cite{schoenberger2016mvs,
-schoenberger2016sfm} -- or, in the case of simulated images, they are provided
-as ground truth image metadata. If $N$ is the number of views taken for a given plant
-scan, we thus have projection models $\pi_i,i \in \{1,\cdots, N\}$,
-such that for any point $x \in \mathbb{R}^3$ of the world, $\pi_i ({x})$ is the
-pixel coordinate of point ${x}$ in view $i$. Let $\Omega = [0,w]
-\times [0,h]$ be the pixel domain for each image, and
+schoenberger2016sfm}. Structure from motion is a well known algorithm which
+allows us to automatically obtain camera poses from a set of rgb pictures, up to
+a scaling of the world. The scaling coefficient is then obtained either
+approximately using the translation parameter of the camera arm, or more
+precisely using a custom calibration procedure. (TODO: see annex? uwritten article?)
 
-$$
-I(x) = \{ i \in
-\{1,\cdots, N \} : \pi_i(x) \in \Omega \}
-$$
-be the set of views for which point
-$x$ projects inside the pixel domain of the corresponding image. Then, for each
-class $k \in \{ 1,\cdots, C \}$, the score $p_k(x)$ of class $k$ is given as:
+If $N$ is the number of views taken of a given scene,
+we thus have projection models -- including both intrinsic camera parameters
+and camera pose estimation -- $\pi_i : \mathbb{R}^3 \rightarrow \mathbb{R}^2,i \in \{1,\cdots, N\}$,
+such that for any world coordinates $x \in \mathbb{R}^3$, $\pi_i ({x})$ is the
+pixel coordinate of point ${x}$ in view $i$.
 
-$$
-\log p_k(x) = \sum_{i\in I(x)} \log ( p_{i,k} (\pi_i(x) ),
-$$
-where $p_{i,k} (y)$ is the output of the segmentation network in the $i$th view
-at pixel $y$.
+\paragraph{Space Carving.} We combine the background class and the space carving
+approach to obtain the geometry of points in space. Space carving~\cite{kutulakos_theory_1999}
+is a photogrammetric approach which uses
+pictures of an object from different point of views to reconstruct
+an object in 3D as a binary function of space. Space is divided into a regular voxel grid with a voxel size chosen
+such that the size of the projection of each voxel is of the same order of magnitude of a pixel in each
+if the pictures. Algorithm~\ref{algorithm:sc} details the space carving method.
 
-Intuitively, it gives the log probability of any given class, assuming that the
-probabilities for each of the classes projected on the images are independent
-random variables.
+The resulting set of voxels whose value is \emph{seen} correspond to the
+\emph{visual hull} of the object under the given views, and is an approximation
+of the true volume occupied by the object in space. To compute a point cloud
+from this volume, a level set method is used, as described in
+algorithm~\ref{algorithm:pcdn}. The signed distance function needed for this algorithm is computed using a
+fast marching algorithm in scipy~\ref{scipy}. This yields a set of point located on the  
+surface of the interface between the inside and the outside of the visual hull.
 
-The space is discretized into a fixed size voxel grid, and $p_k$ is computed at every
-point of the grid. Then, the corresponding voxel is attributed the class which
-yields the highest score. To convert the voxel grid into a labeled point cloud,
-we use a level set algorithm~\ref{algorithm:pcdn}. The signed distance function is computed using a
-fast marching algorithm in scipy~\ref{scipy}.
+\begin{algorithm}
+    \caption{Space carving algorithm}
+    \label{algorithm:sc}
+    \begin{algorithmic}[1]
+        \Function{SpaceCarving}{$V, \Omega, B_1, \pi_1, B_2, \pi_2, \dots, B_N, \pi_N$}
+
+        \Comment{$V$ is a set of voxels, each having a value and a center.}
+        \Comment{$B_i$ is a mask indicating background $B_i(x) == 1$ iff pixel
+$x$ is classified as background.}
+        \Comment{$\pi_i$ is the projection from world coordinates to pixel
+coordinates.}
+        \Comment{$\Omega = [0,w] \times [0,h]$ is the image domain.}
+
+        \For{$v \in V$}
+            $v.\textrm{value} \gets \textrm{unseen}$
+        \EndFor{}
+        \For{$i \in 1, \cdots, N$}
+            \For{$v \in V$}
+                \If{$\pi_i(v) \in \Omega$}
+                    \If{$B_1[\pi_i(v)] == 1$}
+                        $v.\textrm{value} \gets \textrm{background}.$
+                    \ElsIf{$v.\textrm{value} == \textrm{unseen}$}
+                        $v.\textrm{value} \gets \textrm{seen}.$
+                    \EndIf{}
+                \EndIf{}
+            \EndFor{}
+        \EndFor{}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 \begin{algorithm}
     \caption{From voxel grid to point cloud}
@@ -355,3 +359,28 @@ fast marching algorithm in scipy~\ref{scipy}.
     \end{algorithmic}
 \end{algorithm}
 
+\paragraph{Backprojection. }
+
+The following task is to attribute a label to each point in the point cloud
+computed with the previous step. To do so, similarly to the space carving
+method, each point is projected onto segmented images.
+
+Let $M_{i,k}$ denote the output of the segmentation algorithm for view $i$ and
+class $k$. In the following, classes include all non-background organ classes.
+A threshold is applied to the probability scores, so that $M_{i,k} (x) \in \{0,
+1\}$ for all $x$ in $\Omega$. Then, for each point, each class gets a vote from each of its
+projection in the masks $M_{i,k}$:
+
+$$
+M_k(x) = \sum_{i\in I(x)} M_{i,k} (\pi_i(x) ).
+$$
+
+Then the class with the maximal number of votes is attributed to the point:
+
+$$
+\textrm{class}(x) = \textrm{argmax}_k ( M_k(x) ).
+$$
+
+If a point gets no vote from any of its projection, then it is discarded as a
+background point.  This yields a labeled point cloud, such that every point in
+it is attributed a non-background class.
