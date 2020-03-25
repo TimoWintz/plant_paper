@@ -3,8 +3,7 @@ To acquire plant images in a real world application scenario, we use a home made
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
 custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
 A Sony RX0 \alien{RGB }{}camera \alien{with $1920 \times 1060$ resolution}{} is mounted on the camera mount and is controlled using a Wifi interface. This allows for views from any point in space in a box containing
-the imaged plant. Figure~TODO illustrate resulting images from the described
-setup.
+the imaged plant. The set-up in presented in \cite{wintz_automated_nodate}.
 
 \paragraph{Virtual plants.}
 
@@ -44,14 +43,14 @@ comprises:
 
 \tim{Randomness can be added to the models by assigining different
 probabilities to the set for rules. This allow to produce different
-looking individual plants from a single set of rules. Our L-py model
-for \emph{A. Thaliana} can be found online~\cite{}.}{}
+looking individual plants from a single set of rules. \alien{}{Our L-py model
+for \emph{A. Thaliana} can be found online \cite{Lpy_godin}.}}{}
 
 The strings can then be represented graphically in 3D using OpenAlea's
 PlantGL (Figure\ref{fig:lpy}). Figure~\ref{fig:lpy} illustrates a virtual specimen
 of A. Thaliana obtained using the lpy generative model at different timesteps.
 
-The A. Thaliana models comprised 5 different types of organs: fruit, stem, \alien{peduncle}{pedicel}, leaf and flower.
+The A. Thaliana models comprised 5 different types of organs: fruit, stem, pedicel, leaf and flower.
 
 \begin{figure}[h!]
     \centering \includegraphics[width = 0.3\linewidth]{figures/10d.png}\hspace{1em}\includegraphics[width = 0.3\linewidth]{figures/20d.png}
@@ -100,7 +99,7 @@ triggered with a random level of intensity to simulate different artifical light
 acquisition of real life pictures.
 
 \begin{figure}[h]
-    \centering \includegraphics[width=0.1\linewidth]{figures/blank.png}
+    \centering \includegraphics[width=0.3\linewidth]{figures/pinhole.png}
     \caption{Illustration of 2D overlapping due to perspective
     projection } \label{fig:pinhole}
 \end{figure}
@@ -108,7 +107,7 @@ acquisition of real life pictures.
 The \tim{ground truth plant part segmentation is}{virtual labels are} acquired by rendering the plant material by material, with one material per
 \tim{plant part}{organ}~(Figure \ref{fig:plants}). The
 \tim{plant parts}{organs} considered for \emph{A. Thaliana} are leaf, stem, flower,
-fruit and peduncle. \tim{As we will see later for the 3D reconstruction, i}{I}n the pinhole model \cite{} we use for 3D to 2D
+fruit and peduncle. \tim{As we will see later for the 3D reconstruction, i}{I}n the pinhole model \cite{sturm_pinhole_2014} we use for 3D to 2D
 projection, a whole line in 3D projects onto a single pixel (Figure
 \ref{fig:pinhole}). As a consequence, a single pixel can belong to
 several classes depending on the organs crossed by the line. The
@@ -186,7 +185,7 @@ by providing the down-pooling coordinates from the contracting phase.
 \end{figure}
 
 \tim{We decided to use a neural network architecture inspired by}{The structure tested was inspired from}
-U-Net~\cite{ronneberger_u-net:_2015}. However \tim{, to leverage the power of
+U-Net~\cite{ronneberger_u-net:_2015}. However, \tim{to leverage the power of
 already existing labeled datasets}{}, the contracting
 structure, or encoder, was replaced by a classification network trained
 on ImageNet, and with six classes to segment. \tim{Thanks to the great diversity
@@ -199,10 +198,7 @@ in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
 
 \paragraph{Deep learning training} The network was trained with
-images from the virtual scanner. \alien{TODO(Describe the path, dimension
-of the images). The dataset comprised TODO(Number of images)}{The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity.} To make the network robust to images and lignting conditions that are not in
-the dataset, we artificially augment the dataset by adding \alien{TODO(add
-gaussian noise, change contrast, rotation, déformation, more?).}{gaussian noise ($\sigma$ = 0.01) and random rotations. The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$)}. 
+images from the virtual scanner. \alien{The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity.}{TODO(Describe the path, dimension of the images). The dataset comprised TODO(Number of images)} To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding \alien{gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$)}{TODO(add gaussian noise, change contrast, rotation, déformation, more?).}. 
 The dataset was split into 3 sets:
 
 \begin{itemize}
@@ -265,15 +261,15 @@ want to minimise, and is less sensitive to class imbalance.
 
 
 \paragraph{Fine-tuning.} Our network was trained on virtual \emph{A.
-Thaliana} model but aims at reconstructing real plants. \alien{Therefore when
+Thaliana} model but aims at reconstructing real plants. \alien{Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. }{Therefore when
 the virtual plants fail at reproducing the complexity of real plants,
 the network can perform poorly. The network also fails when confronted
-to other plant species with very different traits.}{Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. } Therefore we
+to other plant species with very different traits.} Therefore we
 conceived a simple interface that allows the user to manually label a
 few images of interest (two or three images is enough), then run the training
 of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
-\alien{}{The interface uses LabelMe \cite{} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for this new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.}
+\alien{The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.}{}
 
 
 % \paragraph{Space Carving.} We used space-carving to reconstructi
