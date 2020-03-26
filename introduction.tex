@@ -46,7 +46,13 @@ fine-tuning on real word data.
 
 \alien{Our method focuses on 2d-image processing rather than 3d-data}{} for point cloud data is not as
 easy to process by convolutional neural networks as structured 2d pictures
-(ref.), and 3d voxel volume processing is very computionally expensive (ref. ). \alien{The method also avoids the need for 3D data acquisition method as it relies on a RGB camera.}{}
+(ref.), and 3d voxel volume processing is very computionally expensive (ref. ).
+\alien{The method also avoids the need for 3D data acquisition method as it relies on a RGB camera.}{}
+\tim{Existing methods often rely on 3d geometrical features for the classification of points, but in the
+case of thin plants like Arabidopsis thaliana, the leaves are not
+geometrically very different to other organs, and it is thus hard to differentiate them on these
+criteria only. This further motivates the use of robust methods for 2d
+segmentation instead of 3d methods.}{}
 
 The paper is structured as follows: we begin by a first review of the related
 litterature. Then, we presend the two and three-dimensional segmentation methods
