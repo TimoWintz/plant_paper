@@ -10,27 +10,27 @@ the simulation environment used to generate virtual views of plants. Then, we
 proceed to 2D segmentation methods using convolutional neural networks. After
 that, methods used to transfer that knowledge to a 3d representation of the
 plant are discussed. Figure~\ref{fig:pipe} is a summary of the whole processing
-pipeline developped in this paper.
+pipeline developed in this paper.
 
 \paragraph{Target applicative setup.}
 To acquire plant images in a real world application scenario, we use a home made solution as a 3D
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
 custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
-A Sony RX0 RGB camera with $1920 \times 1060$ resolution is mounted on the camera mount and is controlled using a Wifi interface. This allows for views from any point in space in a box containing
+A Sony RX0 RGB camera with $1920 \times 1060$ resolution is mounted on the camera mount and is controlled using a WiFi interface. This allows for views from any point in space in a box containing
 the imaged plant. The set-up in presented in \cite{wintz2018automated}.
 
 \paragraph{Virtual plants.}
 
 The generative plant models were designed with
 OpenAlea~\cite{pradal2009plantgl}. OpenAlea is an open source software
-suite developped by INRIA to provide tools for plant architecture
-modelling. The model plant \emph{Arabidopsis Thaliana} was chosen to
+suite developed by INRIA to provide tools for plant architecture
+modelling. The model plant Arabidopsis Thaliana was chosen to
 illustrate the methods in the paper, because it is a well-studied
 plant and is a subject of active interest for many biologists.
 
-A generative model of \emph{A. Thaliana} was specifically
+A generative model of A. Thaliana was specifically
 written in the L-py programming language. L-py is a python extension,
-part of OpenAlea, which implements L-systems. L-systems were developped
+part of OpenAlea, which implements L-systems. L-systems were developed
 in 1968 by Aristid Lindenmayer~\cite{prusinkiewicz2012algorithmic}
 to model plant growth.  It is a generative grammar that allows to
 grow a virtual plant using symbols, shapes and constraints derived
@@ -53,14 +53,14 @@ comprises:
     replaced by a \emph{successor}.
 \end{itemize}
 
-Randomness can be added to the models by assigining different
+Randomness can be added to the models by assigning different
 probabilities to the set for rules. This allow to produce different
 looking individual plants from a single set of rules. Our L-py model
-for \emph{A. Thaliana} can be found online \cite{Lpy_godin}.
+for A. Thaliana can be found online \cite{Lpy_godin}.
 
 The strings can then be represented graphically in 3D using OpenAlea's
-PlantGL (Figure\ref{fig:lpy}). Figure~\ref{fig:lpy} illustrates a virtual specimen
-of A. Thaliana obtained using the lpy generative model at different timesteps.
+PlantGL (Figure\ref{fig:L-py}). Figure~\ref{fig:L-py} illustrates a virtual specimen
+of A. Thaliana obtained using the L-py generative model at different time steps.
 
 The A. Thaliana models comprised 5 different types of organs: fruit, stem, pedicel, leaf and flower.
 
@@ -69,9 +69,9 @@ The A. Thaliana models comprised 5 different types of organs: fruit, stem, pedic
 
     \vspace{0.9em}
     \includegraphics[width = 0.3\linewidth]{figures/30d.png}\hspace{1em}\includegraphics[width = 0.3\linewidth]{figures/40d.png}
-    \caption{An example of simulated \emph{Arabidopsis thaliana} using L-py. The four figures are representation of the same
+    \caption{An example of simulated Arabidopsis Thaliana using L-py. The four figures are representation of the same
     simulation after 240 (top left), 480 (top right), 720 (bottom left) and 960 (bottom right) iterations of the
-    L-system.} \label{fig:lpy}
+    L-system.} \label{fig:L-py}
 \end{figure}
 
 
@@ -92,15 +92,15 @@ model around the plant, as we would on the real world setup~(Figure
 \ref{fig:plants}).
 
 To further increase the diversity of the simulated dataset and prevent
-overfitting on the chosen plant textures, random colors are taken
+over-fitting on the chosen plant textures, random colors are taken
 from a reference image and applied as the base color of the plant material.
 
 The scene background is a $360^{\circ}$ real world picture and rendering it in blender reproduces the
 original scene lighting. In order to increase the complexity of the
 images acquired with the virtual scanner, several sets of backgrounds were
-used, without limitations on the lighting environement -- night, daylight,
+used, without limitations on the lighting environment -- night, daylight,
 sunset -- or the type of scene -- indoor or outdoor. A simulated flash light is
-triggered with a random level of intensity to simulate different artifical lighting condition during the
+triggered with a random level of intensity to simulate different artificial lighting condition during the
 acquisition of real life pictures.
 
 \begin{figure}[h]
@@ -111,7 +111,7 @@ acquisition of real life pictures.
 
 The ground truth plant part segmentation is acquired by rendering the plant material by material, with one material per
 plant part~(Figure \ref{fig:plants}). The
-plant parts considered for \emph{A. Thaliana} are leaf, stem, flower,
+plant parts considered for A. Thaliana are leaf, stem, flower,
 fruit and peduncle. As we will see later for the 3D reconstruction, in the pinhole model \cite{sturm_pinhole_2014} we use for 3D to 2D
 projection, a whole line in 3D projects onto a single pixel (Figure
 \ref{fig:pinhole}). As a consequence, a single pixel can belong to
@@ -167,12 +167,12 @@ in the ImageNet dataset, this classification
 structure has already learned to encode the semantic
 representation of an image in the latent space. The classification network that we used is
 ResNet~\cite{he_deep_2015} which is a deep neural network where inputs
-from previous layers are regularly reinjected into deeper layers
+from previous layers are regularly re-injected into deeper layers
 in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
 
 \paragraph{Training from simulated data.} The network was trained with
-images from the virtual scanner. The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity. To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$). 
+images from the virtual scanner. The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity. To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding Gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$). 
 The dataset was split into 3 sets:
 
 \begin{itemize}
@@ -190,9 +190,9 @@ The dataset was split into 3 sets:
 
 
 To evaluate the segmentation of the images, a combination of
-metrics were used. As it is a multiclass problem, a sigmoid is
+metrics were used. As it is a multi-class problem, a sigmoid is
 applied to each output in order to contain the numerical range of
-the predictions. First crossentropy was used, it is a per-pixel
+the predictions. First cross-entropy was used, it is a per-pixel
 metric. It represents the uncertainty of the prediction compared to
 the ground-truth. If the class of a pixel has a very low predicted
 probability, it will highly penalise the loss. If the probability
@@ -230,17 +230,18 @@ is computed vector-wise, and lies between 0 and 1.
 
 
 We used the mean of these two losses for the training, as the
-crossentropy has more stable gradients, but the Dice loss is what we
+cross-entropy has more stable gradients, but the Dice loss is what we
 want to minimise, and is less sensitive to class imbalance.
 
 
-\paragraph{Fine-tuning.} Our network was trained on virtual \emph{A.
-Thaliana} model but aims at reconstructing real plants. Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. Therefore we
+\paragraph{Fine-tuning.} Our network was trained on a virtual A.
+Thaliana model but aims at reconstructing real plants. Although the training performs well for real A. Thaliana, it transfers poorly to other species with large anatomical differences. Therefore we
 conceived a simple interface that allows the user to manually label a
 few images of interest (two or three images is enough), then run the training
 of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
-The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.
+The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species,
+starting from the network trained on the virtual plant models of A. Thaliana.
 
 \paragraph{Structure from motion.} To map points in space to their location in each
 individual pictures, one has to know the precise intrinsic camera models as well
@@ -250,7 +251,7 @@ challenging to perfectly calibrate a camera arm in real world scenarios. Thus,
 we propose to obtain camera poses using a structure from motion algorithm -- in
 this work, we used the open source software Colmap~\cite{schoenberger2016mvs,
 schoenberger2016sfm}. Structure from motion is a well known algorithm which
-allows us to automatically obtain camera poses from a set of rgb pictures, up to
+allows us to automatically obtain camera poses from a set of RGB pictures, up to
 a scaling of the world. The scaling coefficient is then obtained either
 approximately using the translation parameter of the camera arm, or more
 precisely using a custom calibration procedure. (TODO: see annex? uwritten article?)
@@ -275,8 +276,8 @@ obtained from the output probabilities of the segmentation algorithm
 by choosing a threshold for the probability. Since space carving is very
 sensitive to false positives -- pixels labeled as background when they are in
 reality projections from organ class voxels -- the threshold is chosen very
-close to $1$. Moreover, since we only use voxel center and not the pixel space c
-overed by the whole voxel, masks are dilated by one pixel. In the case where
+close to $1$. Moreover, since we only use voxel center and not the pixel space covered
+by the whole voxel, masks are dilated by one pixel. In the case where
 the camera poses are only obtained with a non negligible error,
 dilation of masks is increased to match this possible uncertainty.
 

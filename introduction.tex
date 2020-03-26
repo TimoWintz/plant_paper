@@ -24,31 +24,31 @@ models of plants to feed the machine learning algorithm is a well known method t
 reduce the need for hand annotated data.
 
 Plant architecture is a well studied research topic, and many generative model
-of plant architecture have been developped in the last decades. Lindenmayer
-systems are rewriting systems specifically developped to model plant growth.
+of plant architecture have been developed in the last decades. Lindenmayer
+systems are rewriting systems specifically developed to model plant growth.
 They can be used to model arbitrary complex model of plants~\cite{boudon_l-py:_2012}.
 
 In this work, we propose to use plant models to train convolutional neural network for
 identification of different plant organs in color images, as well as a
 reconstruction of the three dimensional structure of plants from these images. Our method takes RGB images of a plant from different viewpoints as inputs, and outputs a 3D point cloud with each organ segmented.
 The specific target application of our method is the identification of organs of the model
-plant Arabidopsis thaliana. We describe a way to train neural network on simulated models of
+plant Arabidopsis Thaliana. We describe a way to train neural network on simulated models of
 plants in a variable environment rendered with Blender, as well as a simple method for
 fine-tuning on real word data. 
 
 
 Our method focuses on 2D-image processing rather than 3D-data for point cloud data is not as
 easy to process by convolutional neural networks as structured 2D pictures
-(ref.), and 3D voxel volume processing is very computionally expensive (ref. ).
+(ref.), and 3D voxel volume processing is very computationally expensive (ref. ).
 The method also avoids the need for 3D data acquisition method as it relies on a RGB camera.
 Existing methods often rely on 3D geometrical features for the classification of points, but in the
-case of thin plants like Arabidopsis thaliana, the leaves are not
+case of thin plants like Arabidopsis Thaliana, the leaves are not
 geometrically very different to other organs, and it is thus hard to differentiate them on these
 criteria only. This further motivates the use of robust methods for 2D
 segmentation instead of 3D methods.
 
 The paper is structured as follows: we begin by a first review of the related
-litterature. Then, we presend the two and three-dimensional segmentation methods
+literature. Then, we present the two and three-dimensional segmentation methods
 as well as the simulation environments for virtual plants. A presentation of
 quantitative and qualitative results follow. We end the paper with perspectives
 and discussions.
