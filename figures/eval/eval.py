@@ -35,6 +35,7 @@ precision_2d = [eval_virtual[k]["Segmentation2DEvaluation"]["precision"] for k i
 precision_3d = [eval_virtual[k]["PointCloudSegmentationEvaluation"]["precision"] for k in labels]
 
 fig, ax = plt.subplots()
+ax.set_ylim(0,1)
 width = 0.35
 x = np.arange(len(labels))
 rects1 = ax.bar(x - width/2, precision_2d, width, label='2D Segmentation')
@@ -58,6 +59,7 @@ eval_real = json.load(open("./EvaluationReal/Evaluation/eval.json"))
 recall_2d_real = [eval_real[k]["Segmentation2DEvaluation"]["recall"] for k in labels]
 
 fig, ax = plt.subplots()
+ax.set_ylim(0,1)
 width = 0.35
 x = np.arange(len(labels))
 rects1 = ax.bar(x - width/2, recall_2d, width, label='Virtual plants')
@@ -80,6 +82,7 @@ PRECISION REAL VS VIRTUAL
 precision_2d_real = [eval_real[k]["Segmentation2DEvaluation"]["precision"] for k in labels]
 
 fig, ax = plt.subplots()
+ax.set_ylim(0,1)
 width = 0.35
 x = np.arange(len(labels))
 rects1 = ax.bar(x - width/2, precision_2d, width, label='Virtual plants')
