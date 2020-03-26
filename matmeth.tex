@@ -1,3 +1,17 @@
+\begin{figure}[h!]
+    \centering \includegraphics[width = \linewidth]{figures/pipeline.pdf}
+    \caption{A presentation of the 3D segmentation pipeline along with its
+defining parameters.} \label{fig:pipe}
+\end{figure}
+In the following section, we present the different methods use to achieve 3d
+segmentation of a plant from RGB pictures taken around the plant. We first
+succinctly present the applicative setup, then move on to the presentation of
+the simulation environment used to generate virtual views of plants. Then, we
+proceed to 2D segmentation methods using convolutional neural networks. After
+that, methods used to transfer that knowledge to a 3d representation of the
+plant are discussed. Figure~\ref{fig:pipe} is a summary of the whole processing
+pipeline developped in this paper.
+
 \paragraph{Target applicative setup.}
 To acquire plant images in a real world application scenario, we use a home made solution as a 3D
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
