@@ -16,27 +16,25 @@ pipeline developped in this paper.
 To acquire plant images in a real world application scenario, we use a home made solution as a 3D
 scanner. It consists in a X-Carve~\cite{xcarve} CNC Cartesian arm, combined with a
 custom-made pan-tilt camera mount. This setup therefore has five degrees of freedom.
-A Sony RX0 \alien{RGB }{}camera \alien{with $1920 \times 1060$ resolution}{} is mounted on the camera mount and is controlled using a Wifi interface. This allows for views from any point in space in a box containing
+A Sony RX0 RGB camera with $1920 \times 1060$ resolution is mounted on the camera mount and is controlled using a Wifi interface. This allows for views from any point in space in a box containing
 the imaged plant. The set-up in presented in \cite{wintz2018automated}.
 
 \paragraph{Virtual plants.}
 
-The \tim{generative plant models}{virtual plants} were designed with
+The generative plant models were designed with
 OpenAlea~\cite{pradal2009plantgl}. OpenAlea is an open source software
 suite developped by INRIA to provide tools for plant architecture
-modelling. \tim{The model plant \emph{Arabidopsis Thaliana} was chosen to
+modelling. The model plant \emph{Arabidopsis Thaliana} was chosen to
 illustrate the methods in the paper, because it is a well-studied
-plant and is a subject of active interest for many biologists.}{}
+plant and is a subject of active interest for many biologists.
 
-\tim{A generative model of \emph{A. Thaliana} was specifically
+A generative model of \emph{A. Thaliana} was specifically
 written in the L-py programming language. L-py is a python extension,
-part of OpenAlea, which implements L-systems.}{3D meshes of \emph{A.
-Thaliana} were designed with the L-Py library from OpenAlea, which
-is a python implementation of L-system.} L-systems were developped
+part of OpenAlea, which implements L-systems. L-systems were developped
 in 1968 by Aristid Lindenmayer~\cite{prusinkiewicz2012algorithmic}
 to model plant growth.  It is a generative grammar that allows to
 grow a virtual plant using symbols, shapes and constraints derived
-\tim{from}{for} plant growth observation.
+from plant growth observation.
 
 Formally it is called a rewriting system, or formal grammar. It
 comprises:
@@ -55,10 +53,10 @@ comprises:
     replaced by a \emph{successor}.
 \end{itemize}
 
-\tim{Randomness can be added to the models by assigining different
+Randomness can be added to the models by assigining different
 probabilities to the set for rules. This allow to produce different
-looking individual plants from a single set of rules. \alien{}{Our L-py model
-for \emph{A. Thaliana} can be found online \cite{Lpy_godin}.}}{}
+looking individual plants from a single set of rules. Our L-py model
+for \emph{A. Thaliana} can be found online \cite{Lpy_godin}.
 
 The strings can then be represented graphically in 3D using OpenAlea's
 PlantGL (Figure\ref{fig:lpy}). Figure~\ref{fig:lpy} illustrates a virtual specimen
@@ -77,36 +75,29 @@ The A. Thaliana models comprised 5 different types of organs: fruit, stem, pedic
 \end{figure}
 
 
-\tim{The generated plant models are exported as meshes using the
-standard OBJ format.}{}
+The generated plant models are exported as meshes using the
+standard OBJ format.
 
-\paragraph{Virtual scanner.} \tim{The open source software
+\paragraph{Virtual scanner.} The open source software
 Blender~\cite{blender} was chosen for the rendering part. The blender
 Eevee renderer allows for fast and realistic looking rendering of
-scenes and the python bpy modules allows for easy scripting.}{}
+scenes and the python bpy modules allows for easy scripting.
 
-\tim{The idea is to provide a simulated environment similar to
-the real application described above.}{} \tim{A python script using bpy and
-flask}{An API} was \tim{written}{implemented} to
-generate and visualise the generated plant 3D models in Blender.
-\tim{HTTP requests allow us to easily load different plant models and
-backgrounds into the Blender scene, to move the loaded object,
-as well as change the camera position, rotation and its intrinsic
-parameters. The rendering of the scene into an image can also
+The idea is to provide a simulated environment similar to
+the real application described above. A python script using bpy and
+flask was written to generate and visualise the generated plant 3D models in Blender. HTTP requests allow us to easily load different plant models and backgrounds into the Blender scene, to move the loaded object,
+as well as change the camera position, rotation and its intrinsic parameters. The rendering of the scene into an image can also
 be triggered by a simple request. This enables us to take pictures of the
 model around the plant, as we would on the real world setup~(Figure
-\ref{fig:plants}).}{The 3D models are loaded in a virtual environment
-and virtual cameras are used to take pictures of the
-model~(Figure \ref{fig:plants}).}
+\ref{fig:plants}).
 
 To further increase the diversity of the simulated dataset and prevent
 overfitting on the chosen plant textures, random colors are taken
 from a reference image and applied as the base color of the plant material.
 
-\tim{The scene background }{The plant is placed in a virtual background. It} is a $360^{\circ}$
-\tim{real world picture}{image} and rendering it in blender reproduces the
-original scene lighting\tim{. In order to increase the complexity of the
-images acquired with the virtual scanner, s}{S}everal sets of backgrounds were
+The scene background is a $360^{\circ}$ real world picture and rendering it in blender reproduces the
+original scene lighting. In order to increase the complexity of the
+images acquired with the virtual scanner, several sets of backgrounds were
 used, without limitations on the lighting environement -- night, daylight,
 sunset -- or the type of scene -- indoor or outdoor. A simulated flash light is
 triggered with a random level of intensity to simulate different artifical lighting condition during the
@@ -118,10 +109,10 @@ acquisition of real life pictures.
     projection } \label{fig:pinhole}
 \end{figure}
 
-The \tim{ground truth plant part segmentation is}{virtual labels are} acquired by rendering the plant material by material, with one material per
-\tim{plant part}{organ}~(Figure \ref{fig:plants}). The
-\tim{plant parts}{organs} considered for \emph{A. Thaliana} are leaf, stem, flower,
-fruit and peduncle. \tim{As we will see later for the 3D reconstruction, i}{I}n the pinhole model \cite{sturm_pinhole_2014} we use for 3D to 2D
+The ground truth plant part segmentation is acquired by rendering the plant material by material, with one material per
+plant part~(Figure \ref{fig:plants}). The
+plant parts considered for \emph{A. Thaliana} are leaf, stem, flower,
+fruit and peduncle. As we will see later for the 3D reconstruction, in the pinhole model \cite{sturm_pinhole_2014} we use for 3D to 2D
 projection, a whole line in 3D projects onto a single pixel (Figure
 \ref{fig:pinhole}). As a consequence, a single pixel can belong to
 several classes depending on the organs crossed by the line. The
@@ -134,52 +125,22 @@ ground truth image for each class.
     \label{fig:plants}
 \end{figure}
 
-\tim{The virtual scanner was used to generate a training dataset of plant
+The virtual scanner was used to generate a training dataset of plant
 images with plant part segmentation 
-for the training of neural networks.}{}
+for the training of neural networks.
 
 
-% \paragraph{3D ground truth.} The 3D virtual plants were
-% used to train and evaluate the 3D reconstruction. The
-% virtual mesh is regularly subsampled with CloudCompare
-% \cite{girardeau-montaut_cloudcompare-open_2011} in order to get
-% a density matching the voxel density in the volume to carve (see
-% space carving section for explanations). Then this 3D point cloud is
-% voxellized and each voxel of the volume to carve acquires an organ
-% class, or class 0 (background) if it is not part of the plant. Then
-% the vector is saved in a sparse representation to save memory. For the
-% trainings, the data generator reads the sparse vector and encodes it
-% in a dense representation to compare it to the predicted classes. It
-% is needed to densify it because PyTorch can't backpropagate easily
-% through a sparse representation.
-
-%To train the classification on real plants, it was first considered
-% to print a known plant model in 3D with Sculpteo, however the stem of
-% the model wasn't thick enough and it buckled during the printing. We
-% also considered to use an opensource dataset, however most segmented 3D
-% dataset aimed for reconstruction are provided in Lidar or RGB-D data,
-% and not from RGB to 3D. Therefore we decided to restrict ourselves to
-% 3D virtual plants. We also used the 3D reconstructed models with the
-% initial space-carving approach implemented previously in the pipeline
-% \cite{wintz_automated_nodate} for comparison.
-
-
-\paragraph{Image segmentation.} The objective of image \tim{semantic}{} segmentation is
+\paragraph{Image segmentation.} The objective of image semantic segmentation is
 to convert an input image in a stack of probability maps of the same
-dimension as the image. \tim{If $C$ is the number of different classes,
+dimension as the image. If $C$ is the number of different classes,
 semantic segmentation produces $C$ output images with values between $0$ and $1$,
 giving for each pixel of the input image the probability of that pixel
-belonging to the corresponding class.}{For C classes there will be C probability
-maps, each corresponding to one class. The value of a pixel in the
-probability map of class k is the probability that this pixel belongs
-to the organ-type k in the original image.}
+belonging to the corresponding class.
 
-
-\tim{To produce such semantic probability maps, we used a segmentation
-convolutional neural network~\cite{guo_review_2018}}{The image segmentation was performed using segmentation convolutional
-neural network \cite{guo_review_2018}}. \tim{These}{Such} segmentation networks
-are based on a contracting structure from an image to a low dimension\tim{al}{}
-feature space, \tim{called the \emph{latent space}}{}, which encodes the content of the image. It is branched
+To produce such semantic probability maps, we used a segmentation
+convolutional neural network~\cite{guo_review_2018}. These segmentation networks
+are based on a contracting structure from an image to a low dimensional
+feature space, called the \emph{latent space}, which encodes the content of the image. It is branched
 to a symmetric expanding structure that translates the information from
 the feature space to an image similar to the original one, but with
 only the content of interest reconstructed. The contracting structure
@@ -192,27 +153,26 @@ the other direction, with up-pooling layers and convolutions. The
 spatial information is re-injected to reconstruct the image properly,
 by providing the down-pooling coordinates from the contracting phase.
 
-\begin{figure}[h!]
-    \centering \includegraphics[scale = 0.25]{figures/blank.png}
-    \caption{Example of segmentation network: the U-Net architecture
-    \cite{ronneberger_u-net:_2015}} \label{fig:unet}
-\end{figure}
+%\begin{figure}[h!]
+%    \centering \includegraphics[scale = 0.25]{figures/blank.png}
+ %   \caption{Example of segmentation network: the U-Net architecture
+ %   \cite{ronneberger_u-net:_2015}} \label{fig:unet}
+%\end{figure}
 
-\tim{We decided to use a neural network architecture inspired by}{The structure tested was inspired from}
-U-Net~\cite{ronneberger_u-net:_2015}. However, \tim{to leverage the power of
-already existing labeled datasets}{}, the contracting
+We decided to use a neural network architecture inspired by U-Net~\cite{ronneberger_u-net:_2015}. However, to leverage the power of
+already existing labeled datasets, the contracting
 structure, or encoder, was replaced by a classification network trained
-on ImageNet, and with six classes to segment. \tim{Thanks to the great diversity
-in the ImageNet dataset, t}{T}his classification
-structure has already \tim{learned}{been trained} to encode the semantic
-representation of an image in the latent space. \tim{The classification network that we used is}{We tested}
+on ImageNet, and with six classes to segment. Thanks to the great diversity
+in the ImageNet dataset, this classification
+structure has already learned to encode the semantic
+representation of an image in the latent space. The classification network that we used is
 ResNet~\cite{he_deep_2015} which is a deep neural network where inputs
 from previous layers are regularly reinjected into deeper layers
 in order to maintain the geometry and avoid vanishing gradients
 \cite{hochreiter_vanishing_1998}.
 
 \paragraph{Training from simulated data.} The network was trained with
-images from the virtual scanner. \alien{The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity.}{TODO(Describe the path, dimension of the images). The dataset comprised TODO(Number of images)} To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding \alien{gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$)}{TODO(add gaussian noise, change contrast, rotation, déformation, more?).}. 
+images from the virtual scanner. The training set consisted of 2520 images (896x896 pixels), 18 views of 140 different virtual models. The distance and position of the camera around the plant varied to offer more diversity. To make the network robust to images and lighting conditions that are not in the dataset, we artificially augment the dataset by adding gaussian noise ($\sigma$ = 0.01) and random rotations (Figure \ref{fig:trainset}). The images were normalized to correspond to the mean and variance of the training set of ImageNet, on which was initially trained the semantic structure (mean: $(0.485, 0.456, 0.406)$ standard-deviation: $(0.229, 0.224, 0.225)$). 
 The dataset was split into 3 sets:
 
 \begin{itemize}
@@ -275,15 +235,12 @@ want to minimise, and is less sensitive to class imbalance.
 
 
 \paragraph{Fine-tuning.} Our network was trained on virtual \emph{A.
-Thaliana} model but aims at reconstructing real plants. \alien{Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. }{Therefore when
-the virtual plants fail at reproducing the complexity of real plants,
-the network can perform poorly. The network also fails when confronted
-to other plant species with very different traits.} Therefore we
+Thaliana} model but aims at reconstructing real plants. Although the training performs well for real \emph{A. Thaliana}, it transfers poorly to other species with large anatomical differences. Therefore we
 conceived a simple interface that allows the user to manually label a
 few images of interest (two or three images is enough), then run the training
 of the network on this small dataset. This way, the network will be
 able to segment similar images with correct classes.
-\alien{The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.}{}
+The interface uses LabelMe \cite{russell_labelme:_2008} for manual annotations, and runs the training on these images for 20 epochs. This generates a segmentation network specialized for the new species, starting from the network trained on the virtual plant models of \emph{A. Thaliana}.
 
 \paragraph{Structure from motion.} To map points in space to their location in each
 individual pictures, one has to know the precise intrinsic camera models as well

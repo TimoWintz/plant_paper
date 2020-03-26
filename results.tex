@@ -4,7 +4,7 @@ distinct datasets:
     \item A simulated dataset similar to the training dataset (14 different individuals, 1008 images)
     \item A small annotated set of plants from real Arabidopsis thaliana (4 different individuals, 6 images);
     \item A larger set of real Arabidopsis thaliana for qualitative evaluation (12 different indivudals, 864 images);
-    \item A set of real images from another plant (tomato) to evaluate the possibility of transfering the learning onto other species of plants (TODO).
+    \item A set of real images from another plant (tomato) to evaluate the possibility of transfering the learning onto other species of plants.
 \end{enumerate}
 All datasets will be available there: TODO.
 
@@ -12,12 +12,12 @@ Evaluation is done both on the 2D segmentation and on the resulting segmented 3D
 we present a class by class quantitative evaluation of the 2D segmentation method. For dataset A, we additionally  provide
 class by class quantitative evaluation of the 3D voxel segmentation, as well as a comparison of output point clouds
 to the ground truth given by L-Py. For dataset C, we provide qualitative assessment of the results of the segmentation,
-both in 2D and in 3D. For dataset D, we restrict ourselves to qualitative evaluation of the 2D segmentation.
+both in 2D and in 3D. For dataset D, we restrict ourselves to qualitative evaluation of the 2D segmentation and 3D reconstruction.
 
-\tim{Real specimen of Arabidopsis thaliana represent different mutant types and
+Real specimen of Arabidopsis thaliana represent different mutant types and
 development stages -- younger or older individuals, with a single or multiple stems -- as can be seen on figure~\ref{fig:realscans}.
 Their appearance in pictures are very different from the simulated models
-used, such that their segmentation is quite challenging.}{}
+used, such that their segmentation is quite challenging.
 
 The background class is not considered as a class in itself in the evaluation, but is presented in the qualitative example. It
 is only used for contrast when reconstructing point cloud from voxel data.
@@ -76,12 +76,7 @@ recall is the proportion of all elements of a class which have been predicted.
 Figure~\ref{fig:prec_recall_2d_3d} present precision and recall for each class
 for both 2D and 3D segmentation. Voxels and pixels are accumulated over all of
 dataset A. \\
-\alien{The results show that the precision for each class is higher in 3D than in 2D. This is because the transfer to 3D reduces the number of false positives. Two reasons explainin the presence of false-positive in the 2D segmented images. First, the 3D reconstruction carves away the voxels based on the prediction of pixels onto they project. Therefore to avoid losing voxels that are part of the plant, we prefer  to favor false-positive against false-negatives on the 2D predictions and keep a low threshold to make the prediction masks. Second, the network is trained to predict overlaps of classes: one pixel can be attributed to multiple classes. This also favors false-positives over false-negatives. As stem, pedicel and fruits have similar structures (thin and elongated), the segmentation network tends to mix-up the classes and overlap predictions of these classes. However, when projecting in 3D only one class can be attributed per voxel. This class is the most probable class from all viewpoints, which allows to reduce the number of misattributions. On the other hand the first step of the 3D reconstruction consists in carving away all the voxels that are not belonging to the plant. If some pixels that were in the plant are removed in this step, it is impossible to recover them. Therefore the number of false negative increases in the 3D step, which has effect on the recall. This happens for the stem which is sometimes discontinuously reconstructed due to error of prediction on the background class. The false negatives also come from misattribution of class. For example the flowers are very thin, small and surrounded by other organs which makes them hard to predict precisely. It is also significant at organ intersections, for example where the pedicel are branched to the stem. }{These results show that precision is roughly equal or slightly better
-for almost all classes in 3D than in 2D, but recall suffers on classes which are
-occluded a lot: some parts of the stem and some flowers on the top of the plant
-models are occluded by pedicel and fruits on almost all pictures, which explains
-why some part of it are missed.}
-
+The results show that the precision for each class is higher in 3D than in 2D. This is because the transfer to 3D reduces the number of false positives. Two reasons explainin the presence of false-positive in the 2D segmented images. First, the 3D reconstruction carves away the voxels based on the prediction of pixels onto they project. Therefore to avoid losing voxels that are part of the plant, we prefer  to favor false-positive against false-negatives on the 2D predictions and keep a low threshold to make the prediction masks. Second, the network is trained to predict overlaps of classes: one pixel can be attributed to multiple classes. This also favors false-positives over false-negatives. As stem, pedicel and fruits have similar structures (thin and elongated), the segmentation network tends to mix-up the classes and overlap predictions of these classes. However, when projecting in 3D only one class can be attributed per voxel. This class is the most probable class from all viewpoints, which allows to reduce the number of misattributions. On the other hand the first step of the 3D reconstruction consists in carving away all the voxels that are not belonging to the plant. If some pixels that were in the plant are removed in this step, it is impossible to recover them. Therefore the number of false negative increases in the 3D step, which has effect on the recall. This happens for the stem which is sometimes discontinuously reconstructed due to error of prediction on the background class. The false negatives also come from misattribution of class. For example the flowers are very thin, small and surrounded by other organs which makes them hard to predict precisely. It is also significant at organ intersections, for example where the pedicel are branched to the stem. 
 
 \begin{figure}[h!]
     \centering \includegraphics[width = 0.5\linewidth]{figures/eval_precision.pdf}\includegraphics[width = 0.5\linewidth]{figures/eval_recall.pdf}
