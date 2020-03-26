@@ -3,10 +3,10 @@
         "Segmentation2DEvaluation": {
             "tp": 274210,
             "fp": 133381,
-            "tn": 0,
-            "fn": 0,
+            "tn": 404254283,
+            "fn": 31992,
             "precision": 0.6727577399893521,
-            "recall": 1.0
+            "recall": 0.8955199508820975
         },
         "PointCloudSegmentationEvaluation": {
             "tp": 10322,
@@ -21,10 +21,10 @@
         "Segmentation2DEvaluation": {
             "tp": 2733216,
             "fp": 2641007,
-            "tn": 0,
-            "fn": 0,
+            "tn": 631269521,
+            "fn": 156431,
             "precision": 0.5085788215338292,
-            "recall": 1.0
+            "recall": 0.945865013961913
         },
         "PointCloudSegmentationEvaluation": {
             "tp": 213469,
@@ -39,10 +39,10 @@
         "Segmentation2DEvaluation": {
             "tp": 4508848,
             "fp": 990290,
-            "tn": 0,
-            "fn": 0,
+            "tn": 457408443,
+            "fn": 227672,
             "precision": 0.8199190491309729,
-            "recall": 1.0
+            "recall": 0.9519326425308032
         },
         "PointCloudSegmentationEvaluation": {
             "tp": 653645,
@@ -57,10 +57,10 @@
         "Segmentation2DEvaluation": {
             "tp": 1977706,
             "fp": 2048367,
-            "tn": 0,
-            "fn": 0,
+            "tn": 632429836,
+            "fn": 102544,
             "precision": 0.49122457541132514,
-            "recall": 1.0
+            "recall": 0.9507059247686576
         },
         "PointCloudSegmentationEvaluation": {
             "tp": 115632,
@@ -75,10 +75,10 @@
         "Segmentation2DEvaluation": {
             "tp": 1928554,
             "fp": 1550533,
-            "tn": 0,
-            "fn": 0,
+            "tn": 633011669,
+            "fn": 58887,
             "precision": 0.55432761526228,
-            "recall": 1.0
+            "recall": 0.9703704411854238
         },
         "PointCloudSegmentationEvaluation": {
             "tp": 122057,
