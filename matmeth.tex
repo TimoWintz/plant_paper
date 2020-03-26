@@ -298,6 +298,17 @@ an object in 3D as a binary function of space. Space is divided into a regular v
 such that the size of the projection of each voxel is of the same order of magnitude of a pixel in each
 if the pictures. Algorithm~\ref{algorithm:sc} details the space carving method.
 
+The input of the space carving algorithm is a set of binary masks $B_i$
+indicating for each pixel if it belongs to an organ class or not. It is
+obtained from the output probabilities of the segmentation algorithm
+by choosing a threshold for the probability. Since space carving is very
+sensitive to false positives -- pixels labeled as background when they are in
+reality projections from organ class voxels -- the threshold is chosen very
+close to $1$. Moreover, since we only use voxel center and not the pixel space c
+overed by the whole voxel, masks are dilated by one pixel. In the case where
+the camera poses are only obtained with a non negligible error,
+dilation of masks is increased to match this possible uncertainty.
+
 The resulting set of voxels whose value is \emph{seen} correspond to the
 \emph{visual hull} of the object under the given views, and is an approximation
 of the true volume occupied by the object in space. To compute a point cloud
@@ -368,7 +379,9 @@ method, each point is projected onto segmented images.
 Let $M_{i,k}$ denote the output of the segmentation algorithm for view $i$ and
 class $k$. In the following, classes include all non-background organ classes.
 A threshold is applied to the probability scores, so that $M_{i,k} (x) \in \{0,
-1\}$ for all $x$ in $\Omega$. Then, for each point, each class gets a vote from each of its
+1\}$ for all $x$ in $\Omega$. The size of a given voxel
+
+Then, for each point, each class gets a vote from each of its
 projection in the masks $M_{i,k}$:
 
 $$
